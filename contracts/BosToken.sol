@@ -2,7 +2,6 @@
 
 pragma solidity ^0.8.15;
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./interface/ISwapFactory.sol";
@@ -13,7 +12,7 @@ import "./library/Math.sol";
 import "./interface/IToken.sol";
 import "hardhat/console.sol";
 
-contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
+contract BosToken is IERC20, OwnableUpgradeable, IToken {
     struct UserInfo {
         uint256 lpAmount;
         bool preLP;
@@ -21,6 +20,10 @@ contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
 
     mapping(address => uint256) public _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
+
+    string private _name;
+    string private _symbol;
+    uint8 private _decimals;
 
     address public fundAddress;
 
@@ -37,27 +40,25 @@ contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
 
     bool private inSwap;
 
-    uint256 private constant MAX = ~uint256(0);
-
     address public _mainPair;
     address public _usdt;
 
-    bool public _strictCheck = true;
+    bool public _strictCheck;
 
     bool public _startBuy;
     bool public _startSell;
 
     IMintPool public _mintPool;
     uint256 public _lastGiveRewardTime;
-    uint256 private constant _giveRewardDuration = 1 days;
-    bool public _pauseGiveReward = true;
-    uint256 public _giveRewardRate = 70;
+    uint256 private immutable _giveRewardDuration = 1 days;
+    bool public _pauseGiveReward;
+    uint256 public _giveRewardRate;
 
     uint256 public _totalMintReward;
 
-    uint256 public _sellPoolRate = 1000;
+    uint256 public _sellPoolRate;
 
-    uint256 public _sellPoolDestroyRate = 10000;
+    uint256 public _sellPoolDestroyRate;
 
     modifier lockTheSwap {
         inSwap = true;
@@ -74,15 +75,23 @@ contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
         address _fund,
         address _owner)
     external initializer {
-        __ERC20_init("Block Storm", "BOS");
+        _name = "Block Storm";
+        _symbol = "BOS";
+        _decimals = 18;
+        _strictCheck = true;
+        _pauseGiveReward = true;
+        _giveRewardRate = 70;
+        _sellPoolRate = 1000;
+        _sellPoolDestroyRate = 10000;
+
         ISwapRouter swapRouter = ISwapRouter(_router);
         _swapRouter = swapRouter;
-        _allowances[address(this)][address(swapRouter)] = MAX;
+        _allowances[address(this)][address(swapRouter)] = type(uint256).max;
         _swapRouters[address(swapRouter)] = true;
 
         ISwapFactory swapFactory = ISwapFactory(swapRouter.factory());
         _usdt = _usdtAddress;
-        IERC20(_usdt).approve(address(swapRouter), MAX);
+        IERC20(_usdt).approve(address(swapRouter), type(uint256).max);
         address pair = swapFactory.createPair(address(this), _usdt);
         _swapPairList[pair] = true;
         _mainPair = pair;
@@ -107,6 +116,41 @@ contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
         _feeWhiteList[0x9E80518A58442293c607C788c85ea8cC08885C08] = true;
 
         _transferOwnership(_owner);
+    }
+
+    function symbol() external view  returns (string memory) {
+        return _symbol;
+    }
+
+    function name() external view  returns (string memory) {
+        return _name;
+    }
+
+    function decimals() external view  returns (uint8) {
+        return _decimals;
+    }
+
+    function balanceOf(address account) public view override returns (uint256) {
+        return _balances[account];
+    }
+
+    function transfer(address recipient, uint256 amount) public override returns (bool) {
+        _transfer(msg.sender, recipient, amount);
+        return true;
+    }
+
+    function allowance(address owner, address spender) public view override returns (uint256) {
+        return _allowances[owner][spender];
+    }
+
+    function approve(address spender, uint256 amount) public override returns (bool) {
+        _approve(msg.sender, spender, amount);
+        return true;
+    }
+
+    function _approve(address owner, address spender, uint256 amount) private {
+        _allowances[owner][spender] = amount;
+        emit Approval(owner, spender, amount);
     }
 
     function giveMintReward() public {
@@ -143,7 +187,7 @@ contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
 
     function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
         _transfer(sender, recipient, amount);
-        if (_allowances[sender][msg.sender] != MAX) {
+        if (_allowances[sender][msg.sender] != type(uint256).max) {
             _allowances[sender][msg.sender] = _allowances[sender][msg.sender] - amount;
         }
         return true;
@@ -172,13 +216,13 @@ contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
         rewardTotal = _totalMintReward;
         nextReward = balanceOf(_mainPair) * _giveRewardRate / 10000;
         usdtDecimals = 18;
-        tokenDecimals = decimals();
+        tokenDecimals = _decimals;
     }
 
     function getTokenPrice() public view returns (uint256 price){
         (uint256 rUsdt,uint256 rToken) = __getReserves();
         if (rToken > 0) {
-            price = 10 ** decimals() * rUsdt / rToken;
+            price = 10 ** _decimals * rUsdt / rToken;
         }
     }
 
@@ -186,7 +230,7 @@ contract BosToken is ERC20Upgradeable, OwnableUpgradeable, IToken {
         address from,
         address to,
         uint256 amount
-    ) internal override {
+    ) internal {
         uint256 balance = balanceOf(from);
         require(balance >= amount, "Invalid amount");
 
