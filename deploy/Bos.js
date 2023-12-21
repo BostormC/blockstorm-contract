@@ -114,8 +114,7 @@ module.exports = async function ({ethers, deployments}) {
     let mintPool = await ethers.getContract('MintPool');
     console.log("MintPool address:", mintPool.address);
 
-
-    if ((await mintPool._sellNFTRate()).toString == 0){
+    if ((await mintPool._sellNFTRate()) == 0){
         let poolInit = await mintPool.initialize(router,cusdt.address,bos.address,bosNft.address,funder,funder,deployer.address);
         await poolInit.wait();
         console.log("MintPool initialize:", poolInit.hash);
