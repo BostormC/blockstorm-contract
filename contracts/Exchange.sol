@@ -27,10 +27,11 @@ contract Exchange is Ownable {
         _;
     }
 
-    constructor(address _usdt, address _cusd, address initialOwner) {
+    constructor(address _usdt, address _cusd, address _receiver, address initialOwner) {
         usdt = _usdt;
         cusd = _cusd;
         isRun = true;
+        receiver = _receiver;
         transferOwnership(initialOwner);
     }
 
@@ -101,5 +102,9 @@ contract Exchange is Ownable {
 
     function removeFromBlacklist(address _user) external onlyOwner {
         blacklist[_user] = false;
+    }
+
+    function setReceive(address _addr) external onlyOwner {
+        receiver = _addr;
     }
 }

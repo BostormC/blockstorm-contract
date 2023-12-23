@@ -83,9 +83,7 @@ contract MintPool is Ownable, Initializable {
     uint256 public immutable v4Amount = 150000 ether;
     uint256 public immutable v5Amount = 500000 ether;
 
-    address public nftAddress;
-
-    bool private _pauseJoin = true;
+    bool private _pauseJoin;
     uint256 public _lastDailyUpTime;
     uint256 public _lastAmountRate;
     uint256 public _amountDailyUp;
@@ -114,7 +112,7 @@ contract MintPool is Ownable, Initializable {
         require(
             msg.sender == _fundAddress ||
             msg.sender == owner() ||
-            msg.sender == nftAddress,
+            msg.sender == address(_nft),
             "only white list"
         );
         _;
@@ -136,6 +134,7 @@ contract MintPool is Ownable, Initializable {
         address fundAddress,
         address _owner
     ) external initializer {
+        _pauseJoin = true;
         _swapRouter = ISwapRouter(swapRouter);
         _usdt = usdt;
         _minAmount = 100 ether;
@@ -948,7 +947,6 @@ contract MintPool is Ownable, Initializable {
 
     // ******** owner *********
     function setNFTAddress(address _nftAddress) external onlyOwner {
-        nftAddress = _nftAddress;
         _nft = INFT(_nftAddress);
     }
 

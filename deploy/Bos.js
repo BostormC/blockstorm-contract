@@ -21,8 +21,10 @@ module.exports = async function ({ethers, deployments}) {
 
     // await run('verify:verify', {
     //     address: usdtToken.address,
-    //     constructorArguments: ["USDT","USDT"]
+    //     constructorArguments: ["usdt","usdt"]
     // });
+
+    // await usdtToken.mint("0x20aF189a924E816367f076d7596A3D95ef6db0c3","1000000000000000000000000")
 
 
     await deploy('CusdToken', {
@@ -91,7 +93,7 @@ module.exports = async function ({ethers, deployments}) {
 
     await deploy('Exchange', {
         from: deployer.address,
-        args: [usdt,cusdt.address,deployer.address],
+        args: [usdt,cusdt.address,funder,deployer.address],
         log: true,
         contract: 'Exchange'
     })
@@ -119,6 +121,52 @@ module.exports = async function ({ethers, deployments}) {
         await poolInit.wait();
         console.log("MintPool initialize:", poolInit.hash);
     }
+
+
+    //  await run('verify:verify', {
+    //     address:"0x379B33da9aBD7AF3A3256B4fF8fd737f29085A11",
+    //     constructorArguments: []
+    // });
+
+    // let amount = "100000000000000000000000000";
+
+    // let setMinPool = await bos.setMinPool(mintPool.address);
+    // await setMinPool.wait();
+    // console.log("bos setMinPool:", setMinPool.hash);
+
+
+
+
+    // await cusdt.approve(mintPool.address,amount)
+    // console.log("approve ok");
+    // await mintPool.deposit("100000000000000000000","0",funder)
+    // console.log("deposit ok");
+
+    // await mintPool.open();
+    // await mintPool.setNFTAddress(bosNft.address);
+    // let wat = await mintPool.deposit("100000000000000000000","0",funder)
+    // wat.wait();
+
+    // await bos.setPauseGiveReward(false);
+
+    // let watb = await mintPool.setInProject(bos.address,true);
+    // watb.wait();
+
+    // let wat = await mintPool.deposit("100000000000000000000","0",funder)
+    // wat.wait();
+
+    // console.log(await mintPool.getPendingMintReward(funder));
+    //
+    // console.log(await mintPool.poolInfo());
+
+    // await mintPool.claimLP()
+
+    // await mintPool.setUserLevel("0x20aF189a924E816367f076d7596A3D95ef6db0c3",1);
+
+    await bosNft.setMintpool(mintPool.address);
+
+    
+
 
 
 }
