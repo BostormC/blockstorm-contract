@@ -13,7 +13,7 @@ import "./interface/IToken.sol";
 import "hardhat/console.sol";
 
 
-contract MintPool is Ownable, Initializable {
+contract MintPoolLT is Ownable, Initializable {
     struct UserInfo {
         bool isActive;  //启动标记
         uint256 amount; //已存
@@ -104,8 +104,6 @@ contract MintPool is Ownable, Initializable {
 
     event nftTokenReward(address indexed account, uint256 indexed level, uint256 indexed tokenAmount);
     event nftPowerReward(address indexed account, uint256 indexed level, uint256 indexed powerAmount);
-    event Deposit(address indexed account, uint256 indexed amount);
-    event Sell(address indexed account, uint256 indexed tokenAmount, uint256 indexed selfAmount);
 
 
     // ******** modifier *********
@@ -229,8 +227,6 @@ contract MintPool is Ownable, Initializable {
         _giveToken(_usdt, _fundAddress, fundUsdt);
 
         IToken(_mintRewardToken).giveMintReward();
-
-        emit Sell(msg.sender, tokenAmount,selfUsdt);
     }
 
 
@@ -245,29 +241,27 @@ contract MintPool is Ownable, Initializable {
 
         // 绑定邀请关系，统计上三层人数
         _bindInvitor(account, invitor);
-
-        // 转移代币
-        _takeToken(_usdt, account, address(this), amount);
-
-        // 添加流动性
-        addLP(account, amount, minTokenAmount, true);
-
-        // 更新存款池
-        _updatePool();
-
+//
+//        // 转移代币
+//        _takeToken(_usdt, account, address(this), amount);
+//
+//        // 添加流动性
+//        addLP(account, amount, minTokenAmount, true);
+//
+//        // 更新存款池
+//        _updatePool();
+//
         // 调整用户存款金额
         _addUserAmount(account, (amount * _lastAmountRate) / _divFactor, true);
-
-        // 调用奖励合约的发放奖励函数
-        IToken(_mintRewardToken).giveMintReward();
-
-        // 分发 NFT 奖励
-        distributeNFTRewards(invitor, amount);
+//
+//        // 调用奖励合约的发放奖励函数
+//        IToken(_mintRewardToken).giveMintReward();
+//
+//        // 分发 NFT 奖励
+//        distributeNFTRewards(invitor, amount);
 
         // 添加推荐关系 奖励
         addReferral(amount, account, invitor);
-
-        emit Deposit(account, amount);
     }
 
 
@@ -322,7 +316,9 @@ contract MintPool is Ownable, Initializable {
 
 
     function checkForLevelUp(address invitor) public {
+        console.logAddress(invitor);
         if (referrals[invitor].length > 1) {
+            console.log("referral length > 1");
             uint256 totalReferralAmount = referralAmount[invitor] + depositAmount[invitor];
             uint256 currentLevel = userLevel[invitor];
             uint256[5] memory amountCheckArray = [v1Amount * 2, v2Amount, v3Amount, v4Amount, v5Amount];

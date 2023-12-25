@@ -163,7 +163,7 @@ module.exports = async function ({ethers, deployments}) {
 
     // await mintPool.setUserLevel("0x20aF189a924E816367f076d7596A3D95ef6db0c3",1);
 
-    await bosNft.setMintpool(mintPool.address);
+    // await bosNft.setMintpool(mintPool.address);
 
     
 

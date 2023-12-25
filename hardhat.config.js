@@ -33,7 +33,7 @@ module.exports = {
       allowUnlimitedContractSize: true,
       live: true,
       saveDeployments: false,
-      tags: ['local'],
+      tags: ['test'],
       timeout: 2000000,
       chainId: 97
     },
