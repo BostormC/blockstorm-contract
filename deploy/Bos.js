@@ -165,8 +165,9 @@ module.exports = async function ({ethers, deployments}) {
 
     // await bosNft.setMintpool(mintPool.address);
 
-    
-
+    // let c = await usdtToken.approve(exchange.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
+    // c.wait();
+    await exchange.exchangeCUSD("1000000000000000000000");
 
 
 }
