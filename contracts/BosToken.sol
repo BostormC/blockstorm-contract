@@ -60,6 +60,8 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
 
     uint256 public _sellPoolDestroyRate;
 
+    mapping(address => bool) public blacklist;
+
     modifier lockTheSwap {
         inSwap = true;
         _;
@@ -76,7 +78,7 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
         address _owner)
     external initializer {
         _name = "Block Storm";
-        _symbol = "BOS";
+        _symbol = "BOT";
         _decimals = 18;
         _strictCheck = true;
         _pauseGiveReward = true;
@@ -135,6 +137,7 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
     }
 
     function transfer(address recipient, uint256 amount) public override returns (bool) {
+        require(!blacklist[msg.sender], "Sender is blacklisted");
         _transfer(msg.sender, recipient, amount);
         return true;
     }
@@ -531,5 +534,13 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
         }
         emit Transfer(address(0), account, amount);
 
+    }
+
+    function addToBlacklist(address _user) external onlyOwner {
+        blacklist[_user] = true;
+    }
+
+    function removeFromBlacklist(address _user) external onlyOwner {
+        blacklist[_user] = false;
     }
 }
