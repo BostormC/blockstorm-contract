@@ -117,10 +117,10 @@ module.exports = async function ({ethers, deployments}) {
     console.log("MintPool address:", mintPool.address);
 
 
-    // await run('verify:verify', {
-    //     address: "0xf31D6EE8F9C29D94ccc3151Bc6B26AC23272D2c5",
-    //     constructorArguments: []
-    // });
+    await run('verify:verify', {
+        address: "0xbCEac23628A90609499fc2D6892998fF47169Fa8",
+        constructorArguments: []
+    });
 
 
     if ((await mintPool._sellNFTRate()) == 0){
@@ -129,11 +129,6 @@ module.exports = async function ({ethers, deployments}) {
         console.log("MintPool initialize:", poolInit.hash);
     }
 
-
-    //  await run('verify:verify', {
-    //     address:"0xA8356c92B3e693C0d7Ada3296f1Ef85C32EA4615",
-    //     constructorArguments: []
-    // });
 
 
     await deploy('BatchTransfer', {
@@ -148,10 +143,6 @@ module.exports = async function ({ethers, deployments}) {
 
 
 
-    //  await run('verify:verify', {
-    //     address:batchTransfer.address,
-    //     constructorArguments: []
-    // });
 
 
     // let amount = "100000000000000000000000000";
@@ -203,6 +194,9 @@ module.exports = async function ({ethers, deployments}) {
 
     // await cusdt.approve(batchTransfer.address,ethers.utils.parseEther("1000000000000000000"));
     // await bos.approve(batchTransfer.address,ethers.utils.parseEther("1000000000000000000"));
+
+    // await cusd.addToBlacklist("0xc856F71cEC6Fa0FD83E675d06C8ee6327d91aca1");
+
 
 }
 

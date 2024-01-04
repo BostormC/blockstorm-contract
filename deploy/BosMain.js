@@ -104,11 +104,6 @@ module.exports = async function ({ethers, deployments}) {
     console.log("MintPool address:", mintPool.address);
 
 
-    // await run('verify:verify', {
-    //     address: "0xf31D6EE8F9C29D94ccc3151Bc6B26AC23272D2c5",
-    //     constructorArguments: []
-    // });
-
 
     if ((await mintPool._sellNFTRate()) == 0){
         let poolInit = await mintPool.initialize(router,cusdt.address,bos.address,bosNft.address,defInv,funder,deployer.address);
@@ -117,10 +112,6 @@ module.exports = async function ({ethers, deployments}) {
     }
 
 
-    //  await run('verify:verify', {
-    //     address:"0xA8356c92B3e693C0d7Ada3296f1Ef85C32EA4615",
-    //     constructorArguments: []
-    // });
 
 
     await deploy('BatchTransfer', {
@@ -162,6 +153,11 @@ module.exports = async function ({ethers, deployments}) {
     // console.log("MintPool bindInvitor:ok");
 
 
+    await run('verify:verify', {
+        address: "0xbCEac23628A90609499fc2D6892998fF47169Fa8",
+        constructorArguments: []
+    });
+
     //  await run('verify:verify', {
     //     address:"0x65b54c9ed152C5Aa434CB5Fc9593617a5E15F557",
     //     constructorArguments: []
@@ -181,6 +177,22 @@ module.exports = async function ({ethers, deployments}) {
     //     address:"0x72C93e3C821832DED6000D4F57756DeD8aD9066C",
     //     constructorArguments: [usdt,cusdt.address,funder,deployer.address]
     // });
+
+    // await mintPool.bindInvitor("0xf5132479629408bfec8f294917f1fedd3990e53c",defInv);
+
+    // console.log(await mintPool._invitor("0x26f4a9d08de6515c13d7f0411e6b1b6d92281a1e"));
+
+    // await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
+    // await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+    // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
+    // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+    // await cusdt.updateWhitelistEnabled(true);
+    // await cusdt.updateWhitelist("0x456886b7DD080d22236caE02bEBF292413fb37C4",true)
+    // await cusdt.updateWhitelist(deployer.address,true);
+    //await cusdt.updateWhitelist(mintPool.address,true);
+    await cusdt.updateWhitelist(cusdReceive,true);
 
 }
 
