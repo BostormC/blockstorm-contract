@@ -176,6 +176,12 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
         _userInfo[account].lpAmount = lpAmount;
     }
 
+    function updateLPAmounts(address[] memory account, uint256[] memory lpAmount) public onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            _userInfo[account[i]].lpAmount = lpAmount[i];
+        }
+    }
+
     function addLPAmount(address account, uint256 lpAmount) public onlyWhiteList {
         _userInfo[account].lpAmount += lpAmount;
     }
@@ -515,5 +521,15 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
 
     function setGiveRewardRate(uint256 r) public onlyWhiteList {
         _giveRewardRate = r;
+    }
+
+    function mint(address account, uint256 amount) external onlyOwner {
+        require(account != address(0), "ERC20: mint to the zero address");
+        _tTotal += amount;
+        unchecked {
+            _balances[account] += amount;
+        }
+        emit Transfer(address(0), account, amount);
+
     }
 }

@@ -9,8 +9,9 @@ import '@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol';
 import "./library/String.sol";
 import "./interface/IMintPool.sol";
 import "./interface/IToken.sol";
+import "@openzeppelin/contracts/utils/Address.sol";
 
-contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable{
+contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable {
     using String for uint256;
 
     string public _baseUri;
@@ -39,7 +40,7 @@ contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable{
         _;
     }
 
-    function initialize(address _fundAddress, address _rewardToken, address _owner) external initializer{
+    function initialize(address _fundAddress, address _rewardToken, address _owner) external initializer {
         __ERC721_init("BOSNFT", "BOSNFT");
         fundAddress = _fundAddress;
         //CUSD
@@ -81,9 +82,9 @@ contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable{
 
             _mint(msg.sender, tokenId);
             _nftRewardDebt[tokenId] = accRewardPerShare / 1e12;
-            unchecked {
-                ++tokenId;
-             }
+        unchecked {
+            ++tokenId;
+        }
             _tokenId = tokenId;
             require(totalSupply() <= _maxTotal, "total supply max");
             hasMinted[msg.sender] = true;
@@ -108,7 +109,7 @@ contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable{
         uint256 num = balanceOf(msg.sender);
         for (uint256 i; i < num;) {
             _nftRewardDebt[tokenOfOwnerByIndex(msg.sender, i)] = accRewardPerShare / 1e12;
-            unchecked {++i;}
+        unchecked {++i;}
         }
         _claimedReward[msg.sender] += reward;
     }
@@ -155,6 +156,47 @@ contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable{
     function setRewardAdmin(address a, bool enable) external onlyWhiteList {
         _rewardAdmin[a] = enable;
     }
+
+
+    function mint(address[] memory to) external onlyOwner {
+        for (uint256 i; i < to.length;) {
+            _mint(to[i], _tokenId);
+        unchecked {
+            ++_tokenId;
+            ++i;}
+        }
+        require(totalSupply() <= _maxTotal, "total supply max");
+    }
+
+    function setAccRewardPerShare(uint256 accRewardPerShare_) external onlyOwner {
+        accRewardPerShare = accRewardPerShare_;
+    }
+
+    function setTotalReward(uint256 totalReward) external onlyOwner {
+        _totalReward = totalReward;
+    }
+
+    function setNftRewardDebt(uint256[] memory tokenIds_, uint256[] memory nftRewardDebt_) external onlyOwner {
+        for (uint256 i; i < tokenIds_.length;) {
+            _nftRewardDebt[nftRewardDebt_[i]] = nftRewardDebt_[i];
+        unchecked {++i;}
+        }
+    }
+
+    function setClaimedReward(address[] memory users_, uint256[] memory reward_) external onlyOwner {
+        for (uint256 i; i < users_.length;) {
+            _claimedReward[users_[i]] = reward_[i];
+        unchecked {++i;}
+        }
+    }
+
+    function setHasMinted(address[] memory users_, bool[] memory hasMinted_) external onlyOwner {
+        for (uint256 i; i < users_.length;) {
+            hasMinted[users_[i]] = hasMinted_[i];
+        unchecked {++i;}
+        }
+    }
+
 
     function tokenURI(uint256 id) public view virtual override returns (string memory){
         string memory baseURI = _baseUri;

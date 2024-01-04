@@ -5,26 +5,12 @@ module.exports = async function ({ethers, deployments}) {
 
     console.log("deployer address:", deployer.address);
 
-    let funder = deployer.address;
-    let router = "0xD99D1c33F9fC3444f8101754aBC46c52416550D1";
-    // let usdt = "0x55d398326f99059ff775485246999027b3197955";
-
-    await deploy('USDT', {
-        from: deployer.address,
-        args: ["usdt","usdt"],
-        log: true,
-        contract: 'USDT',
-    })
-
-    let usdtToken = await ethers.getContract('USDT');
-    let usdt = usdtToken.address;
-
-    // await run('verify:verify', {
-    //     address: usdtToken.address,
-    //     constructorArguments: ["usdt","usdt"]
-    // });
-
-    // await usdtToken.mint("0x20aF189a924E816367f076d7596A3D95ef6db0c3","1000000000000000000000000")
+    let funder = "0xD61ab6be14ee148505ab85678D8b68f072D435a8";
+    let router = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
+    let usdt = "0x55d398326f99059ff775485246999027b3197955";
+    let bosReceive = "0xb00F40Fa13112DBE4592EcF944e900Bb953599fF";
+    let cusdReceive = "0x4901a332B51F67F0f611fE0BddE08f7218302200";
+    let defInv = "0xd87B5998860B12fbaC974264faa296c187b41DE3";
 
 
     await deploy('CusdToken', {
@@ -45,6 +31,7 @@ module.exports = async function ({ethers, deployments}) {
     }
     console.log("CusdToken address:", cusdt.address);
 
+
     await deploy('BosToken', {
         from: deployer.address,
         args: [],
@@ -61,7 +48,7 @@ module.exports = async function ({ethers, deployments}) {
 
     if (await bos.name()!= "Block Storm"){
         let initBos = 
-        await bos.initialize(router,cusdt.address,10000000,funder,funder,deployer.address);
+        await bos.initialize(router,cusdt.address,21000000,deployer.address,funder,deployer.address);
         await initBos.wait();
         console.log("BosToken initialize:", initBos.hash);
     }
@@ -81,7 +68,7 @@ module.exports = async function ({ethers, deployments}) {
     console.log("BOSNFT address:", bosNft.address);
 
     if (await bosNft.name()!= "BOSNFT"){
-        let bosinit = await bosNft.initialize(deployer.address,bos.address,deployer.address);
+        let bosinit = await bosNft.initialize(funder,bos.address,deployer.address);
         bosinit.wait();
         console.log("BOSNFT initialized");
     }
@@ -124,7 +111,7 @@ module.exports = async function ({ethers, deployments}) {
 
 
     if ((await mintPool._sellNFTRate()) == 0){
-        let poolInit = await mintPool.initialize(router,cusdt.address,bos.address,bosNft.address,funder,funder,deployer.address);
+        let poolInit = await mintPool.initialize(router,cusdt.address,bos.address,bosNft.address,defInv,funder,deployer.address);
         await poolInit.wait();
         console.log("MintPool initialize:", poolInit.hash);
     }
@@ -156,54 +143,34 @@ module.exports = async function ({ethers, deployments}) {
 
     // let amount = "100000000000000000000000000";
 
-    // let setMinPool = await bos.setMinPool(mintPool.address);
-    // await setMinPool.wait();
-    // console.log("bos setMinPool:", setMinPool.hash);
+    let setMinPool = await bos.setMinPool(mintPool.address);
+    await setMinPool.wait();
+    console.log("bos setMinPool:", setMinPool.hash);
 
+    await mintPool.open();
+    console.log("MintPool open:", mintPool.hash);
+    await mintPool.setNFTAddress(bosNft.address);
+    console.log("MintPool setNFTAddress:", mintPool.hash);
 
+    await bos.setPauseGiveReward(false);
+    
+    console.log("bos setPauseGiveReward:ok");
 
+    let watb = await mintPool.setInProject(bos.address,true);
+    watb.wait();
 
-    // await cusdt.approve(mintPool.address,amount)
-    // console.log("approve ok");
-    // await mintPool.deposit("100000000000000000000","0",funder)
-    // console.log("deposit ok");
+    console.log("MintPool setInProject:ok");
 
-    // await mintPool.open();
-    // await mintPool.setNFTAddress(bosNft.address);
-    // let wat = await mintPool.deposit("100000000000000000000","0",funder)
-    // wat.wait();
+    await bosNft.setMintpool(mintPool.address);
 
-    // await bos.setPauseGiveReward(false);
+    console.log("BOSNFT setMintpool:ok");
 
-    // let watb = await mintPool.setInProject(bos.address,true);
-    // watb.wait();
+    await bosNft.setRewardAdmin(mintPool.address,true);
+    console.log("BOSNFT setRewardAdmin:ok");
+    await mintPool.bindInvitor("0x3226750136a5d53c93dbfd5d652042f14b82b1f4",defInv);
+    console.log("MintPool bindInvitor:ok");
 
-    // let wat = await mintPool.deposit("100000000000000000000","0",funder)
-    // wat.wait();
-
-    // console.log(await mintPool.getPendingMintReward(funder));
-    //
-    // console.log(await mintPool.poolInfo());
-
-    // await mintPool.claimLP()
-
-    // await mintPool.setUserLevel("0x20aF189a924E816367f076d7596A3D95ef6db0c3",1);
-
-    // await bosNft.setMintpool(mintPool.address);
-
-    // let c = await usdtToken.approve(exchange.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
-    // c.wait();
-    // await exchange.exchangeCUSD("1000000000000000000000");
-    // await bosNft.setRewardAdmin(mintPool.address,true);
-    // await mintPool.bindInvitor("0x3226750136a5d53c93dbfd5d652042f14b82b1f4",deployer.address);
-    // console.log(await mintPool.poolInfo())
-
-    // await cusdt.mint(deployer.address,ethers.utils.parseEther("100000000"));
-    // await bos.mint(deployer.address,ethers.utils.parseEther("100000000"));
-
-    // await cusdt.approve(batchTransfer.address,ethers.utils.parseEther("1000000000000000000"));
-    // await bos.approve(batchTransfer.address,ethers.utils.parseEther("1000000000000000000"));
-
+    
 }
 
-module.exports.tags = ['Bos']
+module.exports.tags = ['BosMain']

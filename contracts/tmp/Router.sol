@@ -3,6 +3,7 @@
 pragma solidity ^0.8.15;
 
 import "../interface/ISwapRouter.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 
 contract Router {
@@ -29,6 +30,8 @@ contract Router {
     
 
     function addLiquidity(address _router,address _tokenA,address _tokenB) public  {
+        IERC20(_tokenA).approve(_router, type(uint256).max);
+        IERC20(_tokenB).approve(_router, type(uint256).max);
        ISwapRouter(_router).addLiquidity(
         _tokenA, 
         _tokenB,

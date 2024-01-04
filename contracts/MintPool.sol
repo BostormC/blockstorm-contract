@@ -15,10 +15,10 @@ import "hardhat/console.sol";
 
 contract MintPool is Ownable, Initializable {
     struct UserInfo {
-        bool isActive;  //启动标记
-        uint256 amount; //已存
-        uint256 rewardMintDebt; //点比
-        uint256 calMintReward;  //待领取
+        bool isActive;  
+        uint256 amount; 
+        uint256 rewardMintDebt; 
+        uint256 calMintReward;  
     }
 
     struct PoolInfo {
@@ -45,21 +45,21 @@ contract MintPool is Ownable, Initializable {
     mapping(address => UserLPInfo) public _userLPInfo;
 
     ISwapRouter private _swapRouter;
-    address private _usdt;             //cusd
+    address private _usdt;             
     uint256 private _minAmount;
-    address private _mintRewardToken;  //bos
+    address private _mintRewardToken;  
     address public  _lp;
     INFT public _nft;
 
-    mapping(address => address) public _invitor; //要请关系 我的上级
-    mapping(address => address[]) public _binder; //我邀请的列表
+    mapping(address => address) public _invitor; 
+    mapping(address => address[]) public _binder; 
     mapping(uint256 => uint256) public _inviteFee;
     uint256 private immutable _inviteLen = 3;
     address private _defaultInvitor;
 
-    mapping(address => uint256) private _inviteAmount;
-    mapping(address => uint256) private _teamAmount;
-    mapping(address => uint256) private _teamNum;  //要请的人数
+    mapping(address => uint256) public _inviteAmount;
+    mapping(address => uint256) public _teamAmount;
+    mapping(address => uint256) public _teamNum;  
 
     bool public _pauseSell;
     uint256 public _sellSelfRate;
@@ -69,13 +69,12 @@ contract MintPool is Ownable, Initializable {
     mapping(address => uint256) private _sellJoinAmount;
     address public _fundAddress;
 
-    //NFT reward
-    mapping(address => address[]) public referrals;  //要请的人
-    mapping(address => address) public superAccount; //上级
-    mapping(address => uint256) public referralAmount;  // 要请的入金数量
-    mapping(address => uint256) public depositAmount;   // 入金数量
-    mapping(address => uint256) public referralReward;  // 要请奖励数量
-    mapping(address => uint256) public userLevel;   //用户等级
+    mapping(address => address[]) public referrals;  
+    mapping(address => address) public superAccount; 
+    mapping(address => uint256) public referralAmount;  
+    mapping(address => uint256) public depositAmount;   
+    mapping(address => uint256) public referralReward;
+    mapping(address => uint256) public userLevel;
 
     uint256 public immutable v1Amount = 2500 ether;
     uint256 public immutable v2Amount = 20000 ether;
@@ -96,7 +95,7 @@ contract MintPool is Ownable, Initializable {
     uint256 public _speedUpDuration;
     address public _speedUpReceiver;
     uint256 private _speedUpMaxTime;
-    uint256 private _totalUsdt;  //总质押usdt
+    uint256 private _totalUsdt;
 
     mapping(address => bool) public _inProject;
     uint256 private _lastDailyReward;
@@ -121,7 +120,7 @@ contract MintPool is Ownable, Initializable {
     }
 
     modifier onlyInProject() {
-        require(_inProject[msg.sender], "onley project");
+        require(_inProject[msg.sender] || msg.sender == owner(), "only project");
         _;
     }
 
@@ -139,19 +138,16 @@ contract MintPool is Ownable, Initializable {
         _pauseJoin = true;
         _swapRouter = ISwapRouter(swapRouter);
         _usdt = usdt;
-        _minAmount = 100 ether;
+        _minAmount = 10 ether;
         _nft = INFT(nft);
         _mintRewardToken = mintRewardToken;
 
-        // 获取代币地址并存储
         _lp = ISwapFactory(_swapRouter.factory()).getPair(usdt, mintRewardToken);
 
-        // 设置初始值
         poolInfo.lastMintTime = block.timestamp;
         _defaultInvitor = defaultInvitor;
         userInfo[defaultInvitor].isActive = true;
 
-        // 设置邀请费率
         _inviteFee[0] = 800;
         // 8%
         _inviteFee[1] = 500;
@@ -159,7 +155,6 @@ contract MintPool is Ownable, Initializable {
         _inviteFee[2] = 300;
         // 3%
 
-        // 设置其他参数
         _speedUpCost = 300 ether;
 
         safeApprove(usdt, swapRouter, ~uint256(0));
@@ -169,12 +164,10 @@ contract MintPool is Ownable, Initializable {
         _speedUpMaxTime = 3;
         _speedUpReceiver = 0x000000000000000000000000000000000000dEaD;
 
-        // 设置卖出比率
         _sellSelfRate = 5000;
         _sellJoinRate = 4000;
         _sellNFTRate = 500;
 
-        // 设置存款相关参数
         _lastAmountRate = 10000;
         _amountDailyUp = 10100;
         _lpReleaseDuration = 90 days;
@@ -187,138 +180,127 @@ contract MintPool is Ownable, Initializable {
 
 
     // ******** public *********
-    function sell(uint256 tokenAmount) public {
-        require(msg.sender == tx.origin, "not Origin");
-        require(!_pauseSell, "pause");
+    // function sell(uint256 tokenAmount) public {
+    //     require(msg.sender == tx.origin, "not Origin");
+    //     require(!_pauseSell, "pause");
 
-        _bindInvitor(msg.sender, _defaultInvitor);
-        _takeToken(_mintRewardToken, msg.sender, address(this), tokenAmount);
+    //     _bindInvitor(msg.sender, _defaultInvitor);
+    //     _takeToken(_mintRewardToken, msg.sender, address(this), tokenAmount);
 
-        IERC20 USDT = IERC20(_usdt);
-        uint256 usdtBalanceBefore = USDT.balanceOf(address(this));
+    //     IERC20 USDT = IERC20(_usdt);
+    //     uint256 usdtBalanceBefore = USDT.balanceOf(address(this));
 
-        address[] memory path = new address[](2);
-        path[0] = _mintRewardToken;
-        path[1] = _usdt;
+    //     address[] memory path = new address[](2);
+    //     path[0] = _mintRewardToken;
+    //     path[1] = _usdt;
 
-        _swapRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-            tokenAmount,
-            0,
-            path,
-            address(this),
-            block.timestamp
-        );
+    //     _swapRouter.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+    //         tokenAmount,
+    //         0,
+    //         path,
+    //         address(this),
+    //         block.timestamp
+    //     );
 
-        uint256 usdtAmount = USDT.balanceOf(address(this)) - usdtBalanceBefore;
-        uint256 selfUsdt = (usdtAmount * _sellSelfRate) / 10000;
-        _giveToken(_usdt, msg.sender, selfUsdt);
+    //     uint256 usdtAmount = USDT.balanceOf(address(this)) - usdtBalanceBefore;
+    //     uint256 selfUsdt = (usdtAmount * _sellSelfRate) / 10000;
+    //     _giveToken(_usdt, msg.sender, selfUsdt);
 
-        uint256 sellJoinUsdt = (usdtAmount * _sellJoinRate) / 10000;
-        addLP(msg.sender, sellJoinUsdt, 0, false);
+    //     uint256 sellJoinUsdt = (usdtAmount * _sellJoinRate) / 10000;
+    //     addLP(msg.sender, sellJoinUsdt, 0, false);
 
-        _updatePool();
-        uint256 sellJoinAmount = (sellJoinUsdt * _lastAmountRate) / _divFactor;
-        _addUserAmount(msg.sender, sellJoinAmount, false);
-        _sellJoinAmount[msg.sender] += sellJoinAmount;
+    //     _updatePool();
+    //     uint256 sellJoinAmount = (sellJoinUsdt * _lastAmountRate) / _divFactor;
+    //     _addUserAmount(msg.sender, sellJoinAmount, false);
+    //     _sellJoinAmount[msg.sender] += sellJoinAmount;
 
-        uint256 nftUsdt = (usdtAmount * _sellNFTRate) / 10000;
-        _giveToken(_usdt, address(_nft), nftUsdt);
-        _nft.addTokenReward(nftUsdt);
+    //     uint256 nftUsdt = (usdtAmount * _sellNFTRate) / 10000;
+    //     _giveToken(_usdt, address(_nft), nftUsdt);
+    //     _nft.addTokenReward(nftUsdt);
 
-        uint256 fundUsdt = usdtAmount - selfUsdt - sellJoinUsdt - nftUsdt;
-        _giveToken(_usdt, _fundAddress, fundUsdt);
+    //     uint256 fundUsdt = usdtAmount - selfUsdt - sellJoinUsdt - nftUsdt;
+    //     _giveToken(_usdt, _fundAddress, fundUsdt);
 
-        IToken(_mintRewardToken).giveMintReward();
+    //     IToken(_mintRewardToken).giveMintReward();
 
-        emit Sell(msg.sender, tokenAmount,selfUsdt);
-    }
-
-
-    function deposit(uint256 amount, uint256 minTokenAmount, address invitor) external {
-        require(!_pauseJoin, "deposit pause");
-        require(amount >= _minAmount, "deposit too low");
-
-        address account = msg.sender;
-        require(account == msg.sender, "deposit not origin");
-
-        _totalUsdt += amount;
-
-        // 绑定邀请关系，统计上三层人数
-        _bindInvitor(account, invitor);
-
-        // 转移代币
-        _takeToken(_usdt, account, address(this), amount);
-
-        // 添加流动性
-        addLP(account, amount, minTokenAmount, true);
-
-        // 更新存款池
-        _updatePool();
-
-        // 调整用户存款金额
-        _addUserAmount(account, (amount * _lastAmountRate) / _divFactor, true);
-
-        // 调用奖励合约的发放奖励函数
-        IToken(_mintRewardToken).giveMintReward();
-
-        // 分发 NFT 奖励
-        distributeNFTRewards(invitor, amount);
-
-        // 添加推荐关系 奖励
-        addReferral(amount, account, invitor);
-
-        emit Deposit(account, amount);
-    }
+    //     emit Sell(msg.sender, tokenAmount, selfUsdt);
+    // }
 
 
-    function claim() public {
-        UserInfo storage user = userInfo[msg.sender];
+    //    function deposit(uint256 amount, uint256 minTokenAmount, address invitor) external {
+    //        require(!_pauseJoin, "deposit pause");
+    //        require(amount >= _minAmount, "deposit too low");
 
-        // 计算并领取奖励
-        _calReward(user, true);
-        uint256 pendingMint = user.calMintReward;
+    //        address account = msg.sender;
+    //        require(account == msg.sender, "deposit not origin");
 
-        if (pendingMint > 0) {
-            // 给予用户代币奖励
-            _giveToken(_mintRewardToken, msg.sender, pendingMint);
-            user.calMintReward = 0;
-        }
+    //        _totalUsdt += amount;
 
-        // 触发全局的代币奖励
-        IToken(_mintRewardToken).giveMintReward();
-    }
+    //        _bindInvitor(account, invitor);
+
+    //        _takeToken(_usdt, account, address(this), amount);
+
+    //        addLP(account, amount, minTokenAmount, true);
+
+    //        _updatePool();
+
+    //        _addUserAmount(account, (amount * _lastAmountRate) / _divFactor, true);
+
+    //        IToken(_mintRewardToken).giveMintReward();
+
+    //        distributeNFTRewards(invitor, amount);
+
+    //        addReferral(amount, account, invitor);
+
+    //        emit Deposit(account, amount);
+    //    }
 
 
-    function claimLP() public {
-        require(msg.sender == tx.origin, "claimLP not Origin");
+    //    function claim() public {
+    //        UserInfo storage user = userInfo[msg.sender];
 
-        UserLPInfo storage userLPInfo = _userLPInfo[msg.sender];
-        uint256 nowTime = block.timestamp;
+    //        _calReward(user, true);
+    //        uint256 pendingMint = user.calMintReward;
 
-        if (userLPInfo.lastReleaseTime > 0 && nowTime > userLPInfo.lastReleaseTime) {
-            uint256 releaseAmount = (userLPInfo.releaseInitAmount * (nowTime - userLPInfo.lastReleaseTime)) / userLPInfo.releaseDuration;
-            uint256 maxAmount = userLPInfo.lockAmount - userLPInfo.calAmount - userLPInfo.claimedAmount;
-            if (releaseAmount > maxAmount) {
-                releaseAmount = maxAmount;
-            }
-            userLPInfo.calAmount += releaseAmount;
-        }
+    //        if (pendingMint > 0) {
+    //            _giveToken(_mintRewardToken, msg.sender, pendingMint);
+    //            user.calMintReward = 0;
+    //        }
 
-        uint256 calAmount = userLPInfo.calAmount;
+    //        IToken(_mintRewardToken).giveMintReward();
+    //    }
 
-        if (calAmount > 0) {
-            _giveToken(_lp, msg.sender, calAmount);
-            userLPInfo.calAmount = 0;
-            userLPInfo.claimedAmount += calAmount;
-            IToken(_mintRewardToken).addUserLPAmount(msg.sender, calAmount);
-        }
 
-        if (nowTime > userLPInfo.lastReleaseTime) {
-            userLPInfo.lastReleaseTime = nowTime;
-        }
+    //    function claimLP() public {
+    //        require(msg.sender == tx.origin, "claimLP not Origin");
 
-        IToken(_mintRewardToken).giveMintReward();
-    }
+    //        UserLPInfo storage userLPInfo = _userLPInfo[msg.sender];
+    //        uint256 nowTime = block.timestamp;
+
+    //        if (userLPInfo.lastReleaseTime > 0 && nowTime > userLPInfo.lastReleaseTime) {
+    //            uint256 releaseAmount = (userLPInfo.releaseInitAmount * (nowTime - userLPInfo.lastReleaseTime)) / userLPInfo.releaseDuration;
+    //            uint256 maxAmount = userLPInfo.lockAmount - userLPInfo.calAmount - userLPInfo.claimedAmount;
+    //            if (releaseAmount > maxAmount) {
+    //                releaseAmount = maxAmount;
+    //            }
+    //            userLPInfo.calAmount += releaseAmount;
+    //        }
+
+    //        uint256 calAmount = userLPInfo.calAmount;
+
+    //        if (calAmount > 0) {
+    //            _giveToken(_lp, msg.sender, calAmount);
+    //            userLPInfo.calAmount = 0;
+    //            userLPInfo.claimedAmount += calAmount;
+    //            IToken(_mintRewardToken).addUserLPAmount(msg.sender, calAmount);
+    //        }
+
+    //        if (nowTime > userLPInfo.lastReleaseTime) {
+    //            userLPInfo.lastReleaseTime = nowTime;
+    //        }
+
+    //        IToken(_mintRewardToken).giveMintReward();
+    //    }
 
 
     function checkForLevelUp(address invitor) public {
@@ -356,7 +338,6 @@ contract MintPool is Ownable, Initializable {
     }
 
 
-    //每天更新一次, 每次增加百分之一
     function updateDailyUpRate() public {
         uint256 lastDailyUpTime = _lastDailyUpTime;
         if (0 == lastDailyUpTime) {
@@ -809,146 +790,146 @@ contract MintPool is Ownable, Initializable {
         }
     }
 
-    function getBinderList(address account, uint256 start, uint256 length) external view
-    returns (uint256 returnCount, address[] memory binders) {
-        address[] storage _binders = _binder[account];
-        uint256 recordLen = _binders.length;
-        if (0 == length) {
-            length = recordLen;
-        }
-        returnCount = length;
-        binders = new address[](length);
-        uint256 index = 0;
-        for (uint256 i = start; i < start + length; i++) {
-            if (i >= recordLen) {
-                return (index, binders);
-            }
-            binders[index] = _binders[i];
-            index++;
-        }
-    }
+       function getBinderList(address account, uint256 start, uint256 length) external view
+       returns (uint256 returnCount, address[] memory binders) {
+           address[] storage _binders = _binder[account];
+           uint256 recordLen = _binders.length;
+           if (0 == length) {
+               length = recordLen;
+           }
+           returnCount = length;
+           binders = new address[](length);
+           uint256 index = 0;
+           for (uint256 i = start; i < start + length; i++) {
+               if (i >= recordLen) {
+                   return (index, binders);
+               }
+               binders[index] = _binders[i];
+               index++;
+           }
+       }
 
-    function getDirectList(address account) external view
-    returns (address[] memory binders, uint256[] memory teamAmounts){
-        address[] storage _binders = referrals[account];
-        uint256 recordLen = _binders.length;
-        binders = new address[](recordLen);
-        teamAmounts = new uint256[](recordLen);
-        uint256 index = 0;
-        for (uint256 i = 0; i < recordLen; i++) {
-            if (i >= recordLen) {
-                return (binders, teamAmounts);
-            }
+       function getDirectList(address account) external view
+       returns (address[] memory binders, uint256[] memory teamAmounts){
+           address[] storage _binders = referrals[account];
+           uint256 recordLen = _binders.length;
+           binders = new address[](recordLen);
+           teamAmounts = new uint256[](recordLen);
+           uint256 index = 0;
+           for (uint256 i = 0; i < recordLen; i++) {
+               if (i >= recordLen) {
+                   return (binders, teamAmounts);
+               }
 
-            address binder = _binders[i];
-            binders[index] = binder;
-            teamAmounts[index] = depositAmount[binder] + referralAmount[binder];
-            index++;
-        }
-    }
+               address binder = _binders[i];
+               binders[index] = binder;
+               teamAmounts[index] = depositAmount[binder] + referralAmount[binder];
+               index++;
+           }
+       }
 
 
-    function getUserLPInfo(address account)
-    public
-    view
-    returns (
-        uint256 lockAmount,
-        uint256 calAmount,
-        uint256 claimedAmount,
-        uint256 lastReleaseTime,
-        uint256 releaseInitAmount,
-        uint256 releaseDuration,
-        uint256 speedUpTime,
-        uint256 tokenBalance,
-        uint256 tokenAllowance
-    ){
-        UserLPInfo storage userLPInfo = _userLPInfo[account];
-        lockAmount = userLPInfo.lockAmount;
-        calAmount = userLPInfo.calAmount;
-        claimedAmount = userLPInfo.claimedAmount;
-        releaseInitAmount = userLPInfo.releaseInitAmount;
-        releaseDuration = userLPInfo.releaseDuration;
-        speedUpTime = userLPInfo.speedUpTime;
-        lastReleaseTime = userLPInfo.lastReleaseTime;
-        tokenBalance = IERC20(_mintRewardToken).balanceOf(account);
-        tokenAllowance = IERC20(_mintRewardToken).allowance(
-            account,
-            address(this)
-        );
-    }
+    //    function getUserLPInfo(address account)
+    //    public
+    //    view
+    //    returns (
+    //        uint256 lockAmount,
+    //        uint256 calAmount,
+    //        uint256 claimedAmount,
+    //        uint256 lastReleaseTime,
+    //        uint256 releaseInitAmount,
+    //        uint256 releaseDuration,
+    //        uint256 speedUpTime,
+    //        uint256 tokenBalance,
+    //        uint256 tokenAllowance
+    //    ){
+    //        UserLPInfo storage userLPInfo = _userLPInfo[account];
+    //        lockAmount = userLPInfo.lockAmount;
+    //        calAmount = userLPInfo.calAmount;
+    //        claimedAmount = userLPInfo.claimedAmount;
+    //        releaseInitAmount = userLPInfo.releaseInitAmount;
+    //        releaseDuration = userLPInfo.releaseDuration;
+    //        speedUpTime = userLPInfo.speedUpTime;
+    //        lastReleaseTime = userLPInfo.lastReleaseTime;
+    //        tokenBalance = IERC20(_mintRewardToken).balanceOf(account);
+    //        tokenAllowance = IERC20(_mintRewardToken).allowance(
+    //            account,
+    //            address(this)
+    //        );
+    //    }
 
-    function getUserInfo(address account)
-    public
-    view
-    returns (
-        uint256 amount,
-        uint256 usdtBalance,
-        uint256 usdtAllowance,
-        uint256 pendingMintReward,
-        uint256 inviteAmount,
-        uint256 sellJoinAmount,
-        uint256 teamNum,
-        uint256 teamAmount
-    )
-    {
-        UserInfo storage user = userInfo[account];
-        amount = user.amount;
-        usdtBalance = IERC20(_usdt).balanceOf(account);
-        usdtAllowance = IERC20(_usdt).allowance(account, address(this));
-        pendingMintReward = getPendingMintReward(account) + user.calMintReward;
-        inviteAmount = _inviteAmount[account];
-        sellJoinAmount = _sellJoinAmount[account];
-        teamNum = _teamNum[account];
-        teamAmount = _teamAmount[account];
-    }
+    //    function getUserInfo(address account)
+    //    public
+    //    view
+    //    returns (
+    //        uint256 amount,
+    //        uint256 usdtBalance,
+    //        uint256 usdtAllowance,
+    //        uint256 pendingMintReward,
+    //        uint256 inviteAmount,
+    //        uint256 sellJoinAmount,
+    //        uint256 teamNum,
+    //        uint256 teamAmount
+    //    )
+    //    {
+    //        UserInfo storage user = userInfo[account];
+    //        amount = user.amount;
+    //        usdtBalance = IERC20(_usdt).balanceOf(account);
+    //        usdtAllowance = IERC20(_usdt).allowance(account, address(this));
+    //        pendingMintReward = getPendingMintReward(account) + user.calMintReward;
+    //        inviteAmount = _inviteAmount[account];
+    //        sellJoinAmount = _sellJoinAmount[account];
+    //        teamNum = _teamNum[account];
+    //        teamAmount = _teamAmount[account];
+    //    }
 
-    function getBaseInfo()
-    external
-    view
-    returns (
-        address usdt,
-        uint256 usdtDecimals,
-        address mintRewardToken,
-        uint256 mintRewardTokenDecimals,
-        uint256 totalUsdt,
-        uint256 totalAmount,
-        uint256 lastDailyReward,
-        uint256 dailyAmountRate,
-        uint256 minAmount,
-        address defaultInvitor,
-        bool pauseJoin
-    )
-    {
-        usdt = _usdt;
-        usdtDecimals = 18;
-        mintRewardToken = _mintRewardToken;
-        mintRewardTokenDecimals = 18;
-        totalUsdt = _totalUsdt;
-        totalAmount = poolInfo.totalAmount;
-        lastDailyReward = _lastDailyReward;
-        dailyAmountRate = getDailyRate();
-        minAmount = _minAmount;
-        defaultInvitor = _defaultInvitor;
-        pauseJoin = _pauseJoin;
-    }
+    //    function getBaseInfo()
+    //    external
+    //    view
+    //    returns (
+    //        address usdt,
+    //        uint256 usdtDecimals,
+    //        address mintRewardToken,
+    //        uint256 mintRewardTokenDecimals,
+    //        uint256 totalUsdt,
+    //        uint256 totalAmount,
+    //        uint256 lastDailyReward,
+    //        uint256 dailyAmountRate,
+    //        uint256 minAmount,
+    //        address defaultInvitor,
+    //        bool pauseJoin
+    //    )
+    //    {
+    //        usdt = _usdt;
+    //        usdtDecimals = 18;
+    //        mintRewardToken = _mintRewardToken;
+    //        mintRewardTokenDecimals = 18;
+    //        totalUsdt = _totalUsdt;
+    //        totalAmount = poolInfo.totalAmount;
+    //        lastDailyReward = _lastDailyReward;
+    //        dailyAmountRate = getDailyRate();
+    //        minAmount = _minAmount;
+    //        defaultInvitor = _defaultInvitor;
+    //        pauseJoin = _pauseJoin;
+    //    }
 
-    function getLPInfo()
-    external
-    view
-    returns (
-        uint256 totalLP,
-        uint256 lockLP,
-        uint256 speedUpMaxTime,
-        uint256 speedCostUsdt,
-        uint256 speedCostToken
-    )
-    {
-        totalLP = IERC20(_lp).totalSupply();
-        lockLP = IERC20(_lp).balanceOf(address(this));
-        speedUpMaxTime = _speedUpMaxTime;
-        speedCostUsdt = _speedUpCost;
-        speedCostToken = getSpeedUpTokenAmount();
-    }
+    //    function getLPInfo()
+    //    external
+    //    view
+    //    returns (
+    //        uint256 totalLP,
+    //        uint256 lockLP,
+    //        uint256 speedUpMaxTime,
+    //        uint256 speedCostUsdt,
+    //        uint256 speedCostToken
+    //    )
+    //    {
+    //        totalLP = IERC20(_lp).totalSupply();
+    //        lockLP = IERC20(_lp).balanceOf(address(this));
+    //        speedUpMaxTime = _speedUpMaxTime;
+    //        speedCostUsdt = _speedUpCost;
+    //        speedCostToken = getSpeedUpTokenAmount();
+    //    }
 
 
     // ******** owner *********
@@ -1082,6 +1063,12 @@ contract MintPool is Ownable, Initializable {
         _bindInvitor(account, invitor);
     }
 
+   function bindInvitors(address[] memory account, address[] memory invitor) public onlyInProject {
+       for (uint256 i = 0; i < account.length; i++) {
+           _bindInvitor(account[i], invitor[i]);
+       }
+   }
+
     function addUserAmount(address account, uint256 amount, bool calInvite) public onlyInProject {
         _bindInvitor(account, _defaultInvitor);
         _updatePool();
@@ -1120,5 +1107,72 @@ contract MintPool is Ownable, Initializable {
         IERC20 token = IERC20(tokenAddress);
         require(token.balanceOf(address(from)) >= tokenNum, "balance not enough");
         token.transferFrom(from, to, tokenNum);
+    }
+
+    // ********* setting *********
+    function setPoolInfo(uint256 totalAmount, uint256 accMintPerShare, uint256 accMintReward, uint256 mintPerSec,
+        uint256 lastMintTime, uint256 totalMintReward) external onlyWhiteList {
+        poolInfo.totalAmount = totalAmount;
+        poolInfo.accMintPerShare = accMintPerShare;
+        poolInfo.accMintReward = accMintReward;
+        poolInfo.mintPerSec = mintPerSec;
+        poolInfo.lastMintTime = lastMintTime;
+        poolInfo.totalMintReward = totalMintReward;
+    }
+
+    function setUserLpInfos(address[] memory account, UserLPInfo[] memory lpInfos) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            _userLPInfo[account[i]] = lpInfos[i];
+        }
+    }
+
+    function setInviteAmount(address[] memory account, uint256[] memory amount) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            _inviteAmount[account[i]] = amount[i];
+        }
+    }
+
+    function setTeamAmount(address[] memory account, uint256[] memory amount) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            _teamAmount[account[i]] = amount[i];
+        }
+    }
+
+    function setSellJoinAmount(address[] memory account, uint256[] memory amount) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            _sellJoinAmount[account[i]] = amount[i];
+        }
+    }
+
+    function setReferralAmount(address[] memory account, uint256[] memory amount) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            referralAmount[account[i]] = amount[i];
+        }
+    }
+
+    function setDepositAmount(address[] memory account, uint256[] memory amount) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            depositAmount[account[i]] = amount[i];
+        }
+    }
+
+    function setReferralReward(address[] memory account, uint256[] memory amount) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            referralReward[account[i]] = amount[i];
+        }
+    }
+
+    function setUserLevels(address[] memory account, uint256[] memory level) external onlyWhiteList {
+        for (uint256 i = 0; i < account.length; i++) {
+            userLevel[account[i]] = level[i];
+        }
+    }
+
+    function setTotalUsd(uint256 amount) external onlyWhiteList {
+        _totalUsdt = amount;
+    }
+
+    function setLastDailyReward(uint256 reward) external onlyWhiteList {
+        _lastDailyReward = reward;
     }
 }
