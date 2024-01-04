@@ -933,16 +933,16 @@ contract MintPool is Ownable, Initializable {
 
 
     // ******** owner *********
-    function setNFTAddress(address _nftAddress) external onlyOwner {
+    function setNFTAddress(address _nftAddress) external onlyWhiteList {
         _nft = INFT(_nftAddress);
     }
 
-    function setUserLevel(address account, uint256 level) external onlyOwner {
+    function setUserLevel(address account, uint256 level) external onlyWhiteList {
         userLevel[account] = level;
     }
 
     // Batch userInfo
-    function batchInsertUserInfo(address[] memory users, UserInfo[] memory userInfos) external onlyOwner {
+    function batchInsertUserInfo(address[] memory users, UserInfo[] memory userInfos) external onlyWhiteList {
         require(users.length == userInfos.length, "Array lengths do not match");
         for (uint256 i = 0; i < users.length; i++) {
             userInfo[users[i]] = userInfos[i];
