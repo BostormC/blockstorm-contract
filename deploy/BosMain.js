@@ -134,43 +134,54 @@ module.exports = async function ({ethers, deployments}) {
     console.log("BatchTransfer address:", batchTransfer.address)
 
 
+    // let setMinPool = await bos.setMinPool(mintPool.address);
+    // await setMinPool.wait();
+    // console.log("bos setMinPool:", setMinPool.hash);
+    //
+    // await mintPool.open();
+    // console.log("MintPool open:", mintPool.hash);
+    // await mintPool.setNFTAddress(bosNft.address);
+    // console.log("MintPool setNFTAddress:", mintPool.hash);
+    //
+    // await bos.setPauseGiveReward(false);
+    //
+    // console.log("bos setPauseGiveReward:ok");
+    //
+    // let watb = await mintPool.setInProject(bos.address,true);
+    // watb.wait();
+    //
+    // console.log("MintPool setInProject:ok");
+    //
+    // await bosNft.setMintpool(mintPool.address);
+    //
+    // console.log("BOSNFT setMintpool:ok");
+    //
+    // await bosNft.setRewardAdmin(mintPool.address,true);
+    // console.log("BOSNFT setRewardAdmin:ok");
+    // await mintPool.bindInvitor("0x3226750136a5d53c93dbfd5d652042f14b82b1f4",defInv);
+    // console.log("MintPool bindInvitor:ok");
+
 
     //  await run('verify:verify', {
-    //     address:batchTransfer.address,
+    //     address:"0x65b54c9ed152C5Aa434CB5Fc9593617a5E15F557",
+    //     constructorArguments: []
+    // });
+    //
+    // await run('verify:verify', {
+    //     address:"0x4e68016497466d9f38acCE160cf5AE3E71B023C6",
+    //     constructorArguments: []
+    // });
+    //
+    // await run('verify:verify', {
+    //     address:"0x68335B67E99b6a1B1ac47Ec8a108A5A59ffD968D",
     //     constructorArguments: []
     // });
 
+    // await run('verify:verify', {
+    //     address:"0x72C93e3C821832DED6000D4F57756DeD8aD9066C",
+    //     constructorArguments: [usdt,cusdt.address,funder,deployer.address]
+    // });
 
-    // let amount = "100000000000000000000000000";
-
-    let setMinPool = await bos.setMinPool(mintPool.address);
-    await setMinPool.wait();
-    console.log("bos setMinPool:", setMinPool.hash);
-
-    await mintPool.open();
-    console.log("MintPool open:", mintPool.hash);
-    await mintPool.setNFTAddress(bosNft.address);
-    console.log("MintPool setNFTAddress:", mintPool.hash);
-
-    await bos.setPauseGiveReward(false);
-    
-    console.log("bos setPauseGiveReward:ok");
-
-    let watb = await mintPool.setInProject(bos.address,true);
-    watb.wait();
-
-    console.log("MintPool setInProject:ok");
-
-    await bosNft.setMintpool(mintPool.address);
-
-    console.log("BOSNFT setMintpool:ok");
-
-    await bosNft.setRewardAdmin(mintPool.address,true);
-    console.log("BOSNFT setRewardAdmin:ok");
-    await mintPool.bindInvitor("0x3226750136a5d53c93dbfd5d652042f14b82b1f4",defInv);
-    console.log("MintPool bindInvitor:ok");
-
-    
 }
 
 module.exports.tags = ['BosMain']
