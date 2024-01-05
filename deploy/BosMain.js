@@ -153,10 +153,10 @@ module.exports = async function ({ethers, deployments}) {
     // console.log("MintPool bindInvitor:ok");
 
 
-     await run('verify:verify', {
-        address:"0xA16c96022d99a7fa412BAac81c5B541C2fb4102D",
-        constructorArguments: []
-    });
+    //  await run('verify:verify', {
+    //     address:"0xA16c96022d99a7fa412BAac81c5B541C2fb4102D",
+    //     constructorArguments: []
+    // });
 
 
     // await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
