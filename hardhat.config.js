@@ -77,6 +77,12 @@ module.exports = {
       chainId : 56,
       accounts: accounts
     },
+
+    BscBos2: {
+      url: `https://bsc-dataseed1.binance.org/`,
+      chainId : 56,
+      accounts: accounts
+    },
     BscTest: {
       url: `https://data-seed-prebsc-2-s1.binance.org:8545/`,
       chainId : 97,

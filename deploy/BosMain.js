@@ -5,11 +5,11 @@ module.exports = async function ({ethers, deployments}) {
 
     console.log("deployer address:", deployer.address);
 
-    let funder = "0xD61ab6be14ee148505ab85678D8b68f072D435a8";
+    let funder = "0x49843b49d0D7953C650a9a327320FfA14384F14B";
     let router = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
     let usdt = "0x55d398326f99059ff775485246999027b3197955";
-    let bosReceive = "0xb00F40Fa13112DBE4592EcF944e900Bb953599fF";
-    let defInv = "0xd87B5998860B12fbaC974264faa296c187b41DE3";
+    let bosReceive = "0xd741C0CA20f73CB8c214bC5c192d5f2F213c5fDE";
+    let defInv = "0x1845c9bE7586F677a7FD81263e7d5F935a922DDc";
 
 
     await deploy('CusdToken', {
@@ -122,8 +122,8 @@ module.exports = async function ({ethers, deployments}) {
 
     let batchTransfer = await ethers.getContract('BatchTransfer');
     console.log("BatchTransfer address:", batchTransfer.address)
-
-
+    //
+    //
     // let setMinPool = await bos.setMinPool(mintPool.address);
     // await setMinPool.wait();
     // console.log("bos setMinPool:", setMinPool.hash);
@@ -148,22 +148,23 @@ module.exports = async function ({ethers, deployments}) {
     //
     // await bosNft.setRewardAdmin(mintPool.address,true);
     // console.log("BOSNFT setRewardAdmin:ok");
-    // await mintPool.bindInvitor("0x3226750136a5d53c93dbfd5d652042f14b82b1f4",defInv);
-    // console.log("MintPool bindInvitor:ok");
 
 
     // await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
     // await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
-
-    // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
-    // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
-
-    // await cusdt.updateWhitelistEnabled(true);
+    //
+    // // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
+    // // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    //
+    // let aw = await cusdt.updateWhitelistEnabled(true);
+    // await aw.wait();
+    //
     // await cusdt.updateWhitelist(batchTransfer.address,true)
     // await cusdt.updateWhitelist(deployer.address,true);
     // await cusdt.updateWhitelist(mintPool.address,true);
     // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
+
 
 
 }
