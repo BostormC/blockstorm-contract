@@ -122,8 +122,8 @@ module.exports = async function ({ethers, deployments}) {
 
     let batchTransfer = await ethers.getContract('BatchTransfer');
     console.log("BatchTransfer address:", batchTransfer.address)
-
-
+    //
+    //
     // let setMinPool = await bos.setMinPool(mintPool.address);
     // await setMinPool.wait();
     // console.log("bos setMinPool:", setMinPool.hash);
@@ -158,13 +158,39 @@ module.exports = async function ({ethers, deployments}) {
     // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
     // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
-    // await cusdt.updateWhitelistEnabled(true);
+    // let wt = await cusdt.updateWhitelistEnabled(true);
+    // await wt.wait();
     // await cusdt.updateWhitelist(batchTransfer.address,true)
     // await cusdt.updateWhitelist(deployer.address,true);
     // await cusdt.updateWhitelist(mintPool.address,true);
     // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
-    await mintPool.setDefaultInvitor("0xf5132479629408bfEC8f294917F1FEdD3990E53c");
+
+
+    // await run('verify:verify', {
+    //     address: "0xC2Ec3c43D819dc0dd08F474330744cd78C1D9235",
+    //     constructorArguments: []
+    // });
+    //
+    // await run('verify:verify', {
+    //     address: "0x71f538707dfCc34A959f22b7d9158Bb59AB8050A",
+    //     constructorArguments: []
+    // });
+    //
+    // await run('verify:verify', {
+    //     address: "0xb91Cf2f57511D0Df1dbBFA1e890DCDF822c5940f",
+    //     constructorArguments: []
+    // });
+
+    // await run('verify:verify', {
+    //     address: "0xb2C390742EECB92A67481B2dBc6868DeF8b93629",
+    //     constructorArguments: []
+    // });
+
+    // await run('verify:verify', {
+    //     address: exchange.address,
+    //     constructorArguments: [usdt,cusdt.address,funder,deployer.address]
+    // });
 
 }
 
