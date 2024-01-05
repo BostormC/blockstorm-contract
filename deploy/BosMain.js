@@ -5,12 +5,12 @@ module.exports = async function ({ethers, deployments}) {
 
     console.log("deployer address:", deployer.address);
 
-    let funder = "0xD61ab6be14ee148505ab85678D8b68f072D435a8";
+    let funder = "0x49843b49d0D7953C650a9a327320FfA14384F14B";
     let router = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
     let usdt = "0x55d398326f99059ff775485246999027b3197955";
-    let bosReceive = "0xb00F40Fa13112DBE4592EcF944e900Bb953599fF";
-    let cusdReceive = "0x4901a332B51F67F0f611fE0BddE08f7218302200";
-    let defInv = "0xd87B5998860B12fbaC974264faa296c187b41DE3";
+    let bosReceive = "0xd741C0CA20f73CB8c214bC5c192d5f2F213c5fDE";
+    let cusdReceive = "0x25c7d47c3D9DD54632AC3fA2f75FFF521102f259";
+    let defInv = "0xD879c309eD55a3b84BD5831a6d9419A9e70cB8a8";
 
 
     await deploy('CusdToken', {
@@ -153,25 +153,21 @@ module.exports = async function ({ethers, deployments}) {
     // console.log("MintPool bindInvitor:ok");
 
 
-    //  await run('verify:verify', {
-    //     address:"0xA16c96022d99a7fa412BAac81c5B541C2fb4102D",
-    //     constructorArguments: []
-    // });
-
 
     // await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
     // await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
-
-    // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
-    // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
-
+    //
+    //
+    //
     // await cusdt.updateWhitelistEnabled(true);
-    // await cusdt.updateWhitelist("0x456886b7DD080d22236caE02bEBF292413fb37C4",true)
+    // await cusdt.updateWhitelist(batchTransfer.address,true);
     // await cusdt.updateWhitelist(deployer.address,true);
-    //await cusdt.updateWhitelist(mintPool.address,true);
+    // await cusdt.updateWhitelist(mintPool.address,true);
     // await cusdt.updateWhitelist(cusdReceive,true);
-
     // await mintPool.setInProject(funder,true);
+
+    // let lp = ethers.getContractAt(cusdt, "0x7a3a780e7F711Cd87F293be7A4416C6211e1bbA0");
+    // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
 }
 

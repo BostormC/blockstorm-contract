@@ -78,7 +78,7 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
         address _owner)
     external initializer {
         _name = "Block Storm";
-        _symbol = "BOT";
+        _symbol = "BOS";
         _decimals = 18;
         _strictCheck = true;
         _pauseGiveReward = true;

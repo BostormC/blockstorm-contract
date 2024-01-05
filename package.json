@@ -22,7 +22,7 @@
   "homepage": "https://github.com/mapprotocol/map-contracts#readme.md",
   "dependencies": {
     "@nomiclabs/hardhat-etherscan": "^2.1.8",
-    "@openzeppelin/contracts": "4.9。5",
+    "@openzeppelin/contracts": "4.9.5",
     "@openzeppelin/contracts-upgradeable": "4.9.5",
     "aws-sdk": "^2.1137.0",
     "bignumber.js": "^9.0.1",
