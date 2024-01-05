@@ -124,48 +124,74 @@ module.exports = async function ({ethers, deployments}) {
     console.log("BatchTransfer address:", batchTransfer.address)
     //
     //
-    let setMinPool = await bos.setMinPool(mintPool.address);
-    await setMinPool.wait();
-    console.log("bos setMinPool:", setMinPool.hash);
+    // let setMinPool = await bos.setMinPool(mintPool.address);
+    // await setMinPool.wait();
+    // console.log("bos setMinPool:", setMinPool.hash);
+    //
+    // await mintPool.open();
+    // console.log("MintPool open:", mintPool.hash);
+    // await mintPool.setNFTAddress(bosNft.address);
+    // console.log("MintPool setNFTAddress:", mintPool.hash);
+    //
+    // await bos.setPauseGiveReward(false);
+    //
+    // console.log("bos setPauseGiveReward:ok");
+    //
+    // let watb = await mintPool.setInProject(bos.address,true);
+    // watb.wait();
+    //
+    // console.log("MintPool setInProject:ok");
+    //
+    // await bosNft.setMintpool(mintPool.address);
+    //
+    // console.log("BOSNFT setMintpool:ok");
+    //
+    // await bosNft.setRewardAdmin(mintPool.address,true);
+    // console.log("BOSNFT setRewardAdmin:ok");
+    //
+    //
+    // await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
+    // await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
+    //
+    // // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
+    // // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    //
+    // let aw = await cusdt.updateWhitelistEnabled(true);
+    // await aw.wait();
+    //
+    // await cusdt.updateWhitelist(batchTransfer.address,true)
+    // await cusdt.updateWhitelist(deployer.address,true);
+    // await cusdt.updateWhitelist(mintPool.address,true);
+    // await cusdt.updateWhitelist(bosReceive,true);
+    // await mintPool.setInProject(funder,true);
 
-    await mintPool.open();
-    console.log("MintPool open:", mintPool.hash);
-    await mintPool.setNFTAddress(bosNft.address);
-    console.log("MintPool setNFTAddress:", mintPool.hash);
-
-    await bos.setPauseGiveReward(false);
-
-    console.log("bos setPauseGiveReward:ok");
-
-    let watb = await mintPool.setInProject(bos.address,true);
-    watb.wait();
-
-    console.log("MintPool setInProject:ok");
-
-    await bosNft.setMintpool(mintPool.address);
-
-    console.log("BOSNFT setMintpool:ok");
-
-    await bosNft.setRewardAdmin(mintPool.address,true);
-    console.log("BOSNFT setRewardAdmin:ok");
 
 
-    await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
-    await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
+    // await run('verify:verify', {
+    //     address: "0xE028f99b0b6fF7D866b4D0F30DCA1240A47c600C",
+    //     constructorArguments: []
+    // });
 
-    // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
-    // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    // await run('verify:verify', {
+    //     address: "0x237ab9fA639eD24a3F5e45C3abBbC3DC50331c9c",
+    //     constructorArguments: []
+    // });
 
-    let aw = await cusdt.updateWhitelistEnabled(true);
-    await aw.wait();
+    // await run('verify:verify', {
+    //     address: "0xe30618886F4bd165FaadcBfe479Ab569858D617E",
+    //     constructorArguments: []
+    // });
 
-    await cusdt.updateWhitelist(batchTransfer.address,true)
-    await cusdt.updateWhitelist(deployer.address,true);
-    await cusdt.updateWhitelist(mintPool.address,true);
-    await cusdt.updateWhitelist(bosReceive,true);
-    await mintPool.setInProject(funder,true);
+    // await run('verify:verify', {
+    //     address: "0xa5f894Bc32268E25e7b1c42BA32bf2009c236b1e",
+    //     constructorArguments: []
+    // });
+    // await run('verify:verify', {
+    //     address: "0xE175670658c405A61F1B2fd9319043F70eCb0EFD",
+    //     constructorArguments: [usdt,cusdt.address,funder,deployer.address]
+    // });
 
-
+    console.log(await mintPool.userLevel("0x1845c9bE7586F677a7FD81263e7d5F935a922DDc"));
 
 }
 
