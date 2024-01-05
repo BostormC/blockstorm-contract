@@ -173,6 +173,8 @@ module.exports = async function ({ethers, deployments}) {
 
     // await mintPool.setInProject(funder,true);
 
+    console.log(await mintPool.referralAmount("0xa9040ae8C5b4D567Ebcb3314A51626DF807e9338"));
+
 }
 
 module.exports.tags = ['BosMain']
