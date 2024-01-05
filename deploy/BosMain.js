@@ -9,7 +9,7 @@ module.exports = async function ({ethers, deployments}) {
     let router = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
     let usdt = "0x55d398326f99059ff775485246999027b3197955";
     let bosReceive = "0xb00F40Fa13112DBE4592EcF944e900Bb953599fF";
-    let defInv = "0xd87B5998860B12fbaC974264faa296c187b41DE3";
+    let defInv = "0xf5132479629408bfEC8f294917F1FEdD3990E53c";
 
 
     await deploy('CusdToken', {
@@ -164,7 +164,7 @@ module.exports = async function ({ethers, deployments}) {
     // await cusdt.updateWhitelist(mintPool.address,true);
     // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
-
+    await mintPool.setDefaultInvitor("0xf5132479629408bfEC8f294917F1FEdD3990E53c");
 
 }
 
