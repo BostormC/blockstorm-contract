@@ -9,7 +9,6 @@ module.exports = async function ({ethers, deployments}) {
     let router = "0x10ED43C718714eb63d5aA57B78B54704E256024E";
     let usdt = "0x55d398326f99059ff775485246999027b3197955";
     let bosReceive = "0xb00F40Fa13112DBE4592EcF944e900Bb953599fF";
-    let cusdReceive = "0x4901a332B51F67F0f611fE0BddE08f7218302200";
     let defInv = "0xd87B5998860B12fbaC974264faa296c187b41DE3";
 
 
@@ -26,7 +25,7 @@ module.exports = async function ({ethers, deployments}) {
     let cusdt = await ethers.getContract('CusdToken');
     if ((await cusdt.name()).toString()!= "CUSD" ){
         console.log("CUSD initialized");
-        let cusdtinit = await cusdt.initialize(deployer.address);
+        let cusdtinit = await cusdt.initialize(bosReceive,deployer.address);
         cusdtinit.wait();
     }
     console.log("CusdToken address:", cusdt.address);
@@ -48,7 +47,7 @@ module.exports = async function ({ethers, deployments}) {
 
     if (await bos.name()!= "Block Storm"){
         let initBos = 
-        await bos.initialize(router,cusdt.address,21000000,deployer.address,funder,deployer.address);
+        await bos.initialize(router,cusdt.address,21000000,bosReceive,funder,deployer.address);
         await initBos.wait();
         console.log("BosToken initialize:", initBos.hash);
     }
@@ -153,12 +152,6 @@ module.exports = async function ({ethers, deployments}) {
     // console.log("MintPool bindInvitor:ok");
 
 
-    //  await run('verify:verify', {
-    //     address:"0xA16c96022d99a7fa412BAac81c5B541C2fb4102D",
-    //     constructorArguments: []
-    // });
-
-
     // await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
     // await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
 
@@ -166,14 +159,12 @@ module.exports = async function ({ethers, deployments}) {
     // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
     // await cusdt.updateWhitelistEnabled(true);
-    // await cusdt.updateWhitelist("0x456886b7DD080d22236caE02bEBF292413fb37C4",true)
+    // await cusdt.updateWhitelist(batchTransfer.address,true)
     // await cusdt.updateWhitelist(deployer.address,true);
-    //await cusdt.updateWhitelist(mintPool.address,true);
-    // await cusdt.updateWhitelist(cusdReceive,true);
-
+    // await cusdt.updateWhitelist(mintPool.address,true);
+    // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
 
-    console.log(await mintPool.referralAmount("0xa9040ae8C5b4D567Ebcb3314A51626DF807e9338"));
 
 }
 

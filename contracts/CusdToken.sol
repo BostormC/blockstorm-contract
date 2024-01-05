@@ -18,10 +18,10 @@ contract CusdToken is ERC20Upgradeable, ERC20PausableUpgradeable, OwnableUpgrade
     event WhitelistEnabledUpdated(bool isEnabled);
 
 
-     function initialize(address _owner) external initializer {
+     function initialize(address _receive,address _owner) external initializer {
         __ERC20_init("CUSD", "CUSD");
         __ERC20Permit_init("CUSD");
-         _mint(msg.sender, 10000000 * 10 ** decimals());
+         _mint(_receive, 10000000 * 10 ** decimals());
         _transferOwnership(_owner);
     }
 

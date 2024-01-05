@@ -73,7 +73,7 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
         address _router, 
         address _usdtAddress,
         uint256 _supply,
-        address _recevie, 
+        address _receive,
         address _fund,
         address _owner)
     external initializer {
@@ -103,12 +103,12 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
         _tTotal = total;
 
         uint256 receiveTotal = total;
-        _balances[_recevie] = receiveTotal;
-        emit Transfer(address(0), _recevie, receiveTotal);
+        _balances[_receive] = receiveTotal;
+        emit Transfer(address(0), _receive, receiveTotal);
 
         fundAddress = _fund;
 
-        _feeWhiteList[_recevie] = true;
+        _feeWhiteList[_receive] = true;
         _feeWhiteList[_fund] = true;
         _feeWhiteList[address(this)] = true;
         _feeWhiteList[address(swapRouter)] = true;
