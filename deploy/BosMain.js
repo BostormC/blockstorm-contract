@@ -124,46 +124,46 @@ module.exports = async function ({ethers, deployments}) {
     console.log("BatchTransfer address:", batchTransfer.address)
     //
     //
-    // let setMinPool = await bos.setMinPool(mintPool.address);
-    // await setMinPool.wait();
-    // console.log("bos setMinPool:", setMinPool.hash);
-    //
-    // await mintPool.open();
-    // console.log("MintPool open:", mintPool.hash);
-    // await mintPool.setNFTAddress(bosNft.address);
-    // console.log("MintPool setNFTAddress:", mintPool.hash);
-    //
-    // await bos.setPauseGiveReward(false);
-    //
-    // console.log("bos setPauseGiveReward:ok");
-    //
-    // let watb = await mintPool.setInProject(bos.address,true);
-    // watb.wait();
-    //
-    // console.log("MintPool setInProject:ok");
-    //
-    // await bosNft.setMintpool(mintPool.address);
-    //
-    // console.log("BOSNFT setMintpool:ok");
-    //
-    // await bosNft.setRewardAdmin(mintPool.address,true);
-    // console.log("BOSNFT setRewardAdmin:ok");
+    let setMinPool = await bos.setMinPool(mintPool.address);
+    await setMinPool.wait();
+    console.log("bos setMinPool:", setMinPool.hash);
+
+    await mintPool.open();
+    console.log("MintPool open:", mintPool.hash);
+    await mintPool.setNFTAddress(bosNft.address);
+    console.log("MintPool setNFTAddress:", mintPool.hash);
+
+    await bos.setPauseGiveReward(false);
+
+    console.log("bos setPauseGiveReward:ok");
+
+    let watb = await mintPool.setInProject(bos.address,true);
+    watb.wait();
+
+    console.log("MintPool setInProject:ok");
+
+    await bosNft.setMintpool(mintPool.address);
+
+    console.log("BOSNFT setMintpool:ok");
+
+    await bosNft.setRewardAdmin(mintPool.address,true);
+    console.log("BOSNFT setRewardAdmin:ok");
 
 
-    // await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
-    // await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
-    //
-    // // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
-    // // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
-    //
-    // let aw = await cusdt.updateWhitelistEnabled(true);
-    // await aw.wait();
-    //
-    // await cusdt.updateWhitelist(batchTransfer.address,true)
-    // await cusdt.updateWhitelist(deployer.address,true);
-    // await cusdt.updateWhitelist(mintPool.address,true);
-    // await cusdt.updateWhitelist(bosReceive,true);
-    // await mintPool.setInProject(funder,true);
+    await cusdt.approve(batchTransfer.address,"1000000000000000000000000000000000000000000000000000000000000000000000000000");
+    await bos.approve(batchTransfer.address,"100000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+    // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
+    // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
+
+    let aw = await cusdt.updateWhitelistEnabled(true);
+    await aw.wait();
+
+    await cusdt.updateWhitelist(batchTransfer.address,true)
+    await cusdt.updateWhitelist(deployer.address,true);
+    await cusdt.updateWhitelist(mintPool.address,true);
+    await cusdt.updateWhitelist(bosReceive,true);
+    await mintPool.setInProject(funder,true);
 
 
 
