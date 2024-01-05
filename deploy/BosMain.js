@@ -183,7 +183,7 @@ module.exports = async function ({ethers, deployments}) {
     // });
 
     await run('verify:verify', {
-        address: "0x9FEC19EC92b10a188855A977df569F5fB5bBFd0D",
+        address: "0xc6f1Cb3e481D19EA280E2B77387e8c9caBb8d5eA",
         constructorArguments: []
     });
 
