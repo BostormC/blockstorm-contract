@@ -191,6 +191,8 @@ module.exports = async function ({ethers, deployments}) {
     //     constructorArguments: [usdt,cusdt.address,funder,deployer.address]
     // });
 
+
+
     console.log(await mintPool.userLevel("0x1845c9bE7586F677a7FD81263e7d5F935a922DDc"));
 
 }
