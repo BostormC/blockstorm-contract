@@ -158,8 +158,8 @@ module.exports = async function ({ethers, deployments}) {
     // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
     // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
-    // let wt = await cusdt.updateWhitelistEnabled(true);
-    // await wt.wait();
+    let wt = await cusdt.updateWhitelistEnabled(true);
+    await wt.wait();
     // await cusdt.updateWhitelist(batchTransfer.address,true)
     // await cusdt.updateWhitelist(deployer.address,true);
     // await cusdt.updateWhitelist(mintPool.address,true);
@@ -216,7 +216,7 @@ module.exports = async function ({ethers, deployments}) {
 
 
 
-    await mintPool.deposit("10000000000000000000","0",defInv);
+    // await mintPool.deposit("10000000000000000000","0",defInv);
 
 
     // await mintPool.setInProject(funder,true);
