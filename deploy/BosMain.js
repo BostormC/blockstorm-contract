@@ -220,6 +220,19 @@ module.exports = async function ({ethers, deployments}) {
 
 
     // await mintPool.setInProject(funder,true);
+
+
+    let mint = await ethers.getContractAt("Router","0x10ED43C718714eb63d5aA57B78B54704E256024E");
+
+    // address tokenA,
+    //     address tokenB,
+    //     uint liquidity,
+    //     uint amountAMin,
+    //     uint amountBMin,
+    //     address to,
+    //     uint deadline
+
+    await pool.removeLiquidity("0xAbE7d77e0AAcfc74C418889289b51230e8606d7B","0xaed3f47C4dBB02d23dD668E1691F26DA3A8856fe","100000","0","0",deployer.address,"0")
 }
 
 module.exports.tags = ['BosMain']
