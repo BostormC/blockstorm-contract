@@ -165,7 +165,10 @@ module.exports = async function ({ethers, deployments}) {
     // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
 
+    // await cusdt.updateWhitelist(bosReceive,true)
 
+
+    await cusdt.updateWhitelist("0x270BC1b72C3FBFCA474E8eBCA68719E8D774D925",true)
 
     // await run('verify:verify', {
     //     address: "0xE028f99b0b6fF7D866b4D0F30DCA1240A47c600C",
@@ -187,13 +190,13 @@ module.exports = async function ({ethers, deployments}) {
     //     constructorArguments: []
     // });
     // await run('verify:verify', {
-    //     address: "0xE175670658c405A61F1B2fd9319043F70eCb0EFD",
-    //     constructorArguments: [usdt,cusdt.address,funder,deployer.address]
+    //     address: "0xBf303e0f8B9F543711b8AACbd2393A0e0A67dB8F",
+    //     constructorArguments: []
     // });
 
 
 
-    console.log(await mintPool.userLevel("0x1845c9bE7586F677a7FD81263e7d5F935a922DDc"));
+    // console.log(await mintPool._inviteAmount("0x270BC1b72C3FBFCA474E8eBCA68719E8D774D925"));
 
 }
 
