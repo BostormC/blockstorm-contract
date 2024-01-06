@@ -166,7 +166,6 @@ module.exports = async function ({ethers, deployments}) {
     // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
 
-
     // await run('verify:verify', {
     //     address: "0xC2Ec3c43D819dc0dd08F474330744cd78C1D9235",
     //     constructorArguments: []
@@ -182,16 +181,45 @@ module.exports = async function ({ethers, deployments}) {
     //     constructorArguments: []
     // });
 
-    await run('verify:verify', {
-        address: "0xc6f1Cb3e481D19EA280E2B77387e8c9caBb8d5eA",
-        constructorArguments: []
-    });
+    // await run('verify:verify', {
+    //     address: "0x7d638AA0Bd5DfB5D1165323936177b1eB205A75D",
+    //     constructorArguments: []
+    // });
 
     // await run('verify:verify', {
     //     address: exchange.address,
     //     constructorArguments: [usdt,cusdt.address,funder,deployer.address]
     // });
 
+    // await bosNft.setRewardToken(cusdt.address);
+    // await cusdt.updateWhitelist(bosNft.address,true);
+
+    // await cusdt.updateWhitelist(router,true);
+    // await cusdt.updateWhitelist("0x50a99aE63CF125aC7bFB5131130E2D93073F47f2",true);
+    // await cusdt.updateWhitelist(exchange.address,true);
+
+    // let abc = await cusdt.updateWhitelistEnabled(true);
+    // await abc.wait();
+
+    // await bos.setFeeWhiteList(mintPool.address,true);
+
+
+
+    // await  bos.setStrictCheck(false);
+
+    // console.log(await  bos._mainPair());
+    // console.log(await bos.test11("1000000000000000000000"))
+
+
+    // let abc =  await cusdt.approve(mintPool.address,"100000000000000000000000000000000000");
+    // await abc.wait;
+
+
+
+    await mintPool.deposit("10000000000000000000","0",defInv);
+
+
+    // await mintPool.setInProject(funder,true);
 }
 
 module.exports.tags = ['BosMain']

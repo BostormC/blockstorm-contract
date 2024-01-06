@@ -308,8 +308,10 @@ contract MintPool is Ownable, Initializable {
             uint256 totalReferralAmount = referralAmount[invitor] + depositAmount[invitor];
             uint256 currentLevel = userLevel[invitor];
             uint256[5] memory amountCheckArray = [v1Amount * 2, v2Amount, v3Amount, v4Amount, v5Amount];
-            if (checkLevelCount(invitor, amountCheckArray, totalReferralAmount, currentLevel) && currentLevel < 5) {
-                userLevel[invitor] = currentLevel + 1;
+            if (currentLevel < 5){
+                if (checkLevelCount(invitor, amountCheckArray, totalReferralAmount, currentLevel)) {
+                    userLevel[invitor] = currentLevel + 1;
+                }
             }
         }
     }
