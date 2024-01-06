@@ -167,8 +167,10 @@ module.exports = async function ({ethers, deployments}) {
 
     // await cusdt.updateWhitelist(bosReceive,true)
 
+    await cusdt.updateWhitelist(exchange.address,true)
 
-    await cusdt.updateWhitelist("0x270BC1b72C3FBFCA474E8eBCA68719E8D774D925",true)
+
+    // await cusdt.updateWhitelist("0x270BC1b72C3FBFCA474E8eBCA68719E8D774D925",true)
 
     // await run('verify:verify', {
     //     address: "0xE028f99b0b6fF7D866b4D0F30DCA1240A47c600C",
