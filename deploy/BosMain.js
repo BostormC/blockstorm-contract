@@ -158,23 +158,23 @@ module.exports = async function ({ethers, deployments}) {
     // let lp = ethers.getContractAt("IERC20", "0xbb9Db2DdFE61a3dc17cCeF1825701bE4767020E2");
     // await lp.approve(batchTransfer.address,"10000000000000000000000000000000000000000000000000000000000000000000000000000000");
 
-    let wt = await cusdt.updateWhitelistEnabled(true);
-    await wt.wait();
+    // let wt = await cusdt.updateWhitelistEnabled(true);
+    // await wt.wait();
     // await cusdt.updateWhitelist(batchTransfer.address,true)
     // await cusdt.updateWhitelist(deployer.address,true);
     // await cusdt.updateWhitelist(mintPool.address,true);
     // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
 
-    // await run('verify:verify', {
-    //     address: "0xC2Ec3c43D819dc0dd08F474330744cd78C1D9235",
-    //     constructorArguments: []
-    // });
-    //
-    // await run('verify:verify', {
-    //     address: "0x71f538707dfCc34A959f22b7d9158Bb59AB8050A",
-    //     constructorArguments: []
-    // });
+    await run('verify:verify', {
+        address: "0x2ecb8640A3c899cC61012954652788CC0670860d",
+        constructorArguments: []
+    });
+
+    await run('verify:verify', {
+        address: "0x05051816022D536b7A2a47e9670F70AA33a68060",
+        constructorArguments: []
+    });
     //
     // await run('verify:verify', {
     //     address: "0xb91Cf2f57511D0Df1dbBFA1e890DCDF822c5940f",

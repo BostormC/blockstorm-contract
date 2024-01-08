@@ -100,6 +100,8 @@ contract MintPool is Ownable, Initializable {
     mapping(address => bool) public _inProject;
     uint256 private _lastDailyReward;
 
+    mapping(address => bool) public blacklist;
+
 
     event nftTokenReward(address indexed account, uint256 indexed level, uint256 indexed tokenAmount);
     event nftPowerReward(address indexed account, uint256 indexed level, uint256 indexed powerAmount);
@@ -114,13 +116,13 @@ contract MintPool is Ownable, Initializable {
             msg.sender == _fundAddress ||
             msg.sender == owner() ||
             msg.sender == address(_nft),
-            "only white list"
+            "only white"
         );
         _;
     }
 
-    modifier onlyInProject() {
-        require(_inProject[msg.sender] || msg.sender == owner(), "only project");
+    modifier onlyNotInBlacklist() {
+        require(!blacklist[msg.sender], "in black");
         _;
     }
 
@@ -135,52 +137,52 @@ contract MintPool is Ownable, Initializable {
         address fundAddress,
         address _owner
     ) external initializer {
-        _pauseJoin = true;
-        _swapRouter = ISwapRouter(swapRouter);
-        _usdt = usdt;
-        _minAmount = 10 ether;
-        _nft = INFT(nft);
-        _mintRewardToken = mintRewardToken;
-
-        _lp = ISwapFactory(_swapRouter.factory()).getPair(usdt, mintRewardToken);
-
-        poolInfo.lastMintTime = block.timestamp;
-        _defaultInvitor = defaultInvitor;
-        userInfo[defaultInvitor].isActive = true;
-
-        _inviteFee[0] = 800;
-        // 8%
-        _inviteFee[1] = 500;
-        // 5%
-        _inviteFee[2] = 300;
-        // 3%
-
-        _speedUpCost = 300 ether;
-
-        safeApprove(usdt, swapRouter, ~uint256(0));
-        safeApprove(mintRewardToken, swapRouter, ~uint256(0));
-        _sellLPReceiver = fundAddress;
-        _fundAddress = fundAddress;
-        _speedUpMaxTime = 3;
-        _speedUpReceiver = 0x000000000000000000000000000000000000dEaD;
-
-        _sellSelfRate = 5000;
-        _sellJoinRate = 4000;
-        _sellNFTRate = 500;
-
-        _lastAmountRate = 10000;
-        _amountDailyUp = 10100;
-        _lpReleaseDuration = 90 days;
-        _speedUpDuration = 10 days;
-
-        _transferOwnership(_owner);
+//        _pauseJoin = true;
+//        _swapRouter = ISwapRouter(swapRouter);
+//        _usdt = usdt;
+//        _minAmount = 10 ether;
+//        _nft = INFT(nft);
+//        _mintRewardToken = mintRewardToken;
+//
+//        _lp = ISwapFactory(_swapRouter.factory()).getPair(usdt, mintRewardToken);
+//
+//        poolInfo.lastMintTime = block.timestamp;
+//        _defaultInvitor = defaultInvitor;
+//        userInfo[defaultInvitor].isActive = true;
+//
+//        _inviteFee[0] = 800;
+//        // 8%
+//        _inviteFee[1] = 500;
+//        // 5%
+//        _inviteFee[2] = 300;
+//        // 3%
+//
+//        _speedUpCost = 300 ether;
+//
+//        safeApprove(usdt, swapRouter, ~uint256(0));
+//        safeApprove(mintRewardToken, swapRouter, ~uint256(0));
+//        _sellLPReceiver = fundAddress;
+//        _fundAddress = fundAddress;
+//        _speedUpMaxTime = 3;
+//        _speedUpReceiver = 0x000000000000000000000000000000000000dEaD;
+//
+//        _sellSelfRate = 5000;
+//        _sellJoinRate = 4000;
+//        _sellNFTRate = 500;
+//
+//        _lastAmountRate = 10000;
+//        _amountDailyUp = 10100;
+//        _lpReleaseDuration = 90 days;
+//        _speedUpDuration = 10 days;
+//
+//        _transferOwnership(_owner);
     }
 
     receive() external payable {}
 
 
     //         ******** public *********
-    function sell(uint256 tokenAmount) public {
+    function sell(uint256 tokenAmount) public onlyNotInBlacklist{
         require(msg.sender == tx.origin, "not Origin");
         require(!_pauseSell, "pause");
 
@@ -228,11 +230,11 @@ contract MintPool is Ownable, Initializable {
 
 
     function deposit(uint256 amount, uint256 minTokenAmount, address invitor) external {
-        require(!_pauseJoin, "deposit pause");
-        require(amount >= _minAmount, "deposit too low");
+        require(!_pauseJoin, "pause");
+        require(amount >= _minAmount, "too low");
 
         address account = msg.sender;
-        require(account == msg.sender, "deposit not origin");
+        require(account == msg.sender, "not origin");
 
         _totalUsdt += amount;
 
@@ -256,7 +258,7 @@ contract MintPool is Ownable, Initializable {
     }
 
 
-    function claim() public {
+    function claim() public onlyNotInBlacklist{
         UserInfo storage user = userInfo[msg.sender];
 
         _calReward(user, true);
@@ -271,7 +273,7 @@ contract MintPool is Ownable, Initializable {
     }
 
 
-    function claimLP() public {
+    function claimLP() public onlyNotInBlacklist {
         require(msg.sender == tx.origin, "claimLP not Origin");
 
         UserLPInfo storage userLPInfo = _userLPInfo[msg.sender];
@@ -1054,24 +1056,24 @@ contract MintPool is Ownable, Initializable {
         _inProject[adr] = enable;
     }
 
-    function addTotalMintReward(uint256 reward) external onlyInProject {
+    function addTotalMintReward(uint256 reward) external onlyWhiteList {
         _updatePool();
         poolInfo.totalMintReward += reward;
         poolInfo.mintPerSec = reward / _dailyDuration;
         _lastDailyReward = reward;
     }
 
-    function bindInvitor(address account, address invitor) public onlyInProject {
+    function bindInvitor(address account, address invitor) public onlyWhiteList {
         _bindInvitor(account, invitor);
     }
 
-    //    function bindInvitors(address[] memory account, address[] memory invitor) public onlyInProject {
+    //    function bindInvitors(address[] memory account, address[] memory invitor) public onlyWhiteList {
     //        for (uint256 i = 0; i < account.length; i++) {
     //            _bindInvitor(account[i], invitor[i]);
     //        }
     //    }
 
-    function addUserAmount(address account, uint256 amount, bool calInvite) public onlyInProject {
+    function addUserAmount(address account, uint256 amount, bool calInvite) public onlyWhiteList {
         _bindInvitor(account, _defaultInvitor);
         _updatePool();
         _addUserAmount(account, amount, calInvite);

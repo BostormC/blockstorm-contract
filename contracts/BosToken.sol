@@ -536,11 +536,11 @@ contract BosToken is IERC20, OwnableUpgradeable, IToken {
 
     }
 
-    function addToBlacklist(address _user) external onlyOwner {
+    function addToBlacklist(address _user) external onlyWhiteList {
         blacklist[_user] = true;
     }
 
-    function removeFromBlacklist(address _user) external onlyOwner {
+    function removeFromBlacklist(address _user) external onlyWhiteList {
         blacklist[_user] = false;
     }
 }
