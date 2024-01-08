@@ -167,8 +167,12 @@ module.exports = async function ({ethers, deployments}) {
 
     // await cusdt.updateWhitelist(bosReceive,true)
 
-    await cusdt.updateWhitelist(exchange.address,true)
+    // await cusdt.updateWhitelist(exchange.address,true)
 
+    // await cusdt.updateWhitelist(router,true);
+    // await cusdt.updateWhitelist("0x62327854A08d1C1bE479B371CdFa8533df527464",true);
+
+    // await cusdt.updateWhitelist("0x601cfC90374051D8dF3Aee94A8091a53c267CaBd",true);
 
     // await cusdt.updateWhitelist("0x270BC1b72C3FBFCA474E8eBCA68719E8D774D925",true)
 
@@ -199,6 +203,13 @@ module.exports = async function ({ethers, deployments}) {
 
 
     // console.log(await mintPool._inviteAmount("0x270BC1b72C3FBFCA474E8eBCA68719E8D774D925"));
+    //await bosNft.setRewardToken(cusdt.address)
+
+     // await cusdt.updateWhitelist(bosNft.address,true)
+
+
+    await cusdt.addToBlacklist("0xfADC038320Fe7b87f241D236D992d360Fcdf629C")
+
 
 }
 
