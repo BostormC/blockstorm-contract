@@ -34,9 +34,16 @@ contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable {
     mapping(address => bool) public _rewardAdmin;
     uint256 public _totalReward;
     mapping(address => uint256) public _claimedReward;
+    mapping(address => bool) public blacklist;
+
 
     modifier onlyWhiteList() {
         require(msg.sender == fundAddress || msg.sender == owner(), "only white list");
+        _;
+    }
+
+    modifier onlyNotInBlacklist() {
+        require(!blacklist[msg.sender], "in black");
         _;
     }
 
@@ -100,7 +107,7 @@ contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable {
         }
     }
 
-    function claimReward() external {
+    function claimReward() external onlyNotInBlacklist{
         uint256 reward = pendingReward(msg.sender);
         IERC20 token = IERC20(rewardToken);
         require(token.balanceOf(address(this)) >= reward, "Insufficient balance");
@@ -155,6 +162,10 @@ contract BOSNFT is ERC721EnumerableUpgradeable, OwnableUpgradeable {
 
     function setRewardAdmin(address a, bool enable) external onlyWhiteList {
         _rewardAdmin[a] = enable;
+    }
+
+    function setBlockList(address adr, bool enable) external onlyWhiteList {
+        blacklist[adr] = enable;
     }
 
 

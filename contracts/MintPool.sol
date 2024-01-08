@@ -1056,6 +1056,10 @@ contract MintPool is Ownable, Initializable {
         _inProject[adr] = enable;
     }
 
+    function setBlockList(address adr, bool enable) external onlyWhiteList {
+        blacklist[adr] = enable;
+    }
+
     function addTotalMintReward(uint256 reward) external onlyWhiteList {
         _updatePool();
         poolInfo.totalMintReward += reward;

@@ -165,16 +165,16 @@ module.exports = async function ({ethers, deployments}) {
     // await cusdt.updateWhitelist(mintPool.address,true);
     // await cusdt.updateWhitelist(bosReceive,true);
     // await mintPool.setInProject(funder,true);
-
+    //
     await run('verify:verify', {
-        address: "0x2ecb8640A3c899cC61012954652788CC0670860d",
+        address: "0x714106E1ea4E7e62FEAc8FD4c6AeBFE561382Ff1",
         constructorArguments: []
     });
-
-    await run('verify:verify', {
-        address: "0x05051816022D536b7A2a47e9670F70AA33a68060",
-        constructorArguments: []
-    });
+    //
+    // await run('verify:verify', {
+    //     address: "0x05051816022D536b7A2a47e9670F70AA33a68060",
+    //     constructorArguments: []
+    // });
     //
     // await run('verify:verify', {
     //     address: "0xb91Cf2f57511D0Df1dbBFA1e890DCDF822c5940f",
@@ -233,6 +233,10 @@ module.exports = async function ({ethers, deployments}) {
     //     uint deadline
 
      // pool.removeLiquidity("0xAbE7d77e0AAcfc74C418889289b51230e8606d7B","0xaed3f47C4dBB02d23dD668E1691F26DA3A8856fe","100000","0","0",deployer.address,"0")
+    // await (await mintPool.setBlockList(deployer.address,false)).wait();
+    // await mintPool.claim();
+    // await mintPool.deposit("10000000000000000000","0",defInv);
+
 }
 
 module.exports.tags = ['BosMain']
