@@ -197,6 +197,9 @@ module.exports = async function ({ethers, deployments}) {
 
     // await cusd.addToBlacklist("0xc856F71cEC6Fa0FD83E675d06C8ee6327d91aca1");
 
+    await mintPool.claim();
+
+
 
 }
 
